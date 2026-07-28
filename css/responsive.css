@@ -1,0 +1,1010 @@
+@charset "utf-8";
+
+/* ==========================================================================
+   responsive.css
+   Tablet  : 768px ~ 1279px  (디자인 기준 1012px / 콘텐츠 852px)
+   Mobile  : ~ 767px         (디자인 기준 390px  / 콘텐츠 330px)
+   ========================================================================== */
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+@media (max-width: 1279px) {
+  :root {
+    --pad_x: 80px;
+    --inner_wide: 852px;
+    --inner_narrow: 852px;
+    --inner_mid: 852px;
+
+    --fs_display: 84px;
+    --fs_section: 36px;
+    --fs_marquee: 68px;
+    --fs_info: 28px;
+    --fs_panel_title: 36px;
+
+    --header_top: 50px;
+    --header_inner: 800px;
+  }
+
+  /* ---------- Header : 햄버거 메뉴 ---------- */
+  .nav_wrap {
+    position: relative;
+  }
+
+  .header_util .util_btn.type_menu {
+    display: flex;
+    order: -1;
+  }
+
+  .header_util .util_btn.type_my,
+  .header_util .util_btn.type_search {
+    width: 24px;
+    height: 24px;
+  }
+
+  .gnb {
+    display: none;
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    z-index: 10;
+    width: max-content;
+    max-width: calc(100vw - var(--pad_x) * 2);
+    height: auto;
+    padding: 24px 20px;
+    overflow-x: auto;
+    border-radius: var(--r_chip);
+  }
+
+  .gnb.is_open {
+    display: block;
+  }
+
+  .gnb_list {
+    justify-content: flex-start;
+  }
+
+  /* ---------- MATCH ---------- */
+  .match {
+    padding: 90px var(--pad_x);
+  }
+
+  .ranking_wrap {
+    width: 368px;
+  }
+
+  .rank_text {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    width: 192px;
+  }
+
+  .rank_num,
+  .rank_stat {
+    width: auto;
+  }
+
+  .match_head .btn_glass {
+    padding: 12px 18px;
+    font-size: 14px;
+  }
+
+  /* ---------- INFO ---------- */
+  .info {
+    height: 120px;
+    padding: 0 60px;
+  }
+
+  .info .btn_glass {
+    font-size: 14px;
+  }
+
+  /* ---------- PLAYER ---------- */
+  .player {
+    min-height: 1224px;
+    padding: 200px var(--pad_x) 120px;
+  }
+
+  .player_tit_col {
+    width: 149px;
+  }
+
+  .player_bottom {
+    justify-content: center;
+  }
+
+  /* ---------- GALLERY ---------- */
+  .gallery {
+    padding: 120px var(--pad_x) 80px;
+  }
+
+  .gallery_photos {
+    top: -1049px;
+    left: 135.97%;
+  }
+
+  .qna_vid {
+    height: 276px;
+  }
+
+  /* ---------- BEARS TV ---------- */
+  .bears_tv {
+    padding: 320px var(--pad_x) 160px;
+  }
+
+  .bears_tv_head .btn_more {
+    padding: 12px 18px;
+  }
+
+  /* ---------- JAMSIL GUIDE ---------- */
+  .jamsil_guide {
+    padding: 155px 0 380px;
+  }
+
+  .guide_tit {
+    position: static;
+    align-items: center;
+    width: 100%;
+    max-width: none;
+    padding: 0 60px 80px;
+    text-align: center;
+  }
+
+  .guide_tit .tit_display {
+    font-size: 86px;
+  }
+
+  .guide_mascot {
+    top: 71px;
+    left: 86px;
+    width: 240px;
+  }
+
+  .guide_list {
+    width: 800px;
+    margin: 0 auto;
+  }
+
+  .guide_img {
+    width: 400px;
+    height: 370px;
+  }
+
+  .guide_slide_area {
+    width: 400px;
+  }
+
+  .guide_slide_list img {
+    width: 252px;
+    height: 252px;
+  }
+
+  /* 오프라인 샵 : 이미지 위 / 설명 아래로 적층 */
+  .guide_shop_item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 22px;
+    width: 400px;
+  }
+
+  .guide_shop_item .pic {
+    width: 100%;
+    height: 120px;
+  }
+
+  .guide_shop_desc {
+    padding: 0;
+  }
+
+  .deli {
+    left: -161px;
+    top: 334px;
+  }
+
+  /* ---------- SHOP ---------- */
+  .shop {
+    padding: 180px var(--pad_x);
+  }
+
+  .shop_inner {
+    gap: 48px;
+  }
+
+  .shop_head {
+    gap: 48px;
+  }
+
+  .shop_sub_tit strong {
+    font-size: 26px;
+  }
+
+  .shop_sub_tit p {
+    font-size: var(--fs_body);
+  }
+
+  .shop_tap a {
+    padding: 14px 10px;
+  }
+
+  .scroll_count {
+    font-size: var(--fs_body_sm);
+  }
+
+  /* ---------- NEWS / EVENT ---------- */
+  .news_event {
+    padding: 120px var(--pad_x);
+  }
+
+  .news_side {
+    width: 96px;
+  }
+
+  .news_side p {
+    font-size: var(--fs_body);
+  }
+
+  .news_thumb {
+    display: none;
+  }
+
+  .tab_list.type_dark .tab_btn {
+    padding: 0 28px;
+    font-size: var(--fs_body);
+  }
+
+  /* ---------- COMMUNICATION ---------- */
+  .communication {
+    padding: 120px var(--pad_x);
+  }
+
+  .qna_group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    max-width: 512px;
+  }
+
+  .qna_vid {
+    width: 340px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  .footer_con {
+    max-width: none;
+    padding: 30px var(--pad_x) 80px;
+  }
+
+  .footer_right {
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 46px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+@media (max-width: 767px) {
+  :root {
+    --pad_x: 30px;
+    --inner_wide: 100%;
+    --inner_narrow: 100%;
+    --inner_mid: 100%;
+
+    --fs_display: 36px;
+    --fs_section: 24px;
+    --fs_marquee: 56px;
+    --fs_info: 18px;
+    --fs_panel_title: 24px;
+    --fs_body: 16px;
+    --fs_body_sm: 14px;
+
+    --header_top: 20px;
+    --header_inner: 320px;
+    --gnb_height: 32px;
+  }
+
+  /* ---------- Header ---------- */
+  .logo {
+    width: 56px;
+    height: 33px;
+  }
+
+  .header_util {
+    gap: 12px;
+    height: auto;
+    padding: 4px 8px;
+  }
+
+  .header_util .util_btn.type_my {
+    display: none;
+  }
+
+  .header_util .util_btn.type_search {
+    width: 24px;
+    height: 24px;
+  }
+
+  .gnb {
+    max-width: calc(100vw - 40px);
+    padding: 20px 16px;
+  }
+
+  .gnb_item {
+    width: 104px;
+    padding: 0 12px;
+    gap: 24px;
+  }
+
+  .gnb_sub {
+    gap: 14px;
+  }
+
+  .gnb_tit,
+  .gnb_sub a {
+    font-size: var(--fs_body_sm);
+  }
+
+  /* ---------- MATCH ---------- */
+  .match {
+    padding: 80px var(--pad_x);
+  }
+
+  .ranking_wrap {
+    width: 100%;
+  }
+
+  .now_ranking {
+    justify-content: space-between;
+    padding: 28px;
+  }
+
+  .rank_text {
+    width: 120px;
+    gap: 32px;
+  }
+
+  .badge_grad {
+    font-size: 12px;
+  }
+
+  .rank_num .label {
+    font-size: 22px;
+  }
+
+  .rank_num .value b {
+    font-size: 40px;
+  }
+
+  .rank_record {
+    font-size: var(--fs_body);
+  }
+
+  .match_head .btn_glass {
+    gap: 4px;
+    padding: 4px 12px;
+    font-size: var(--fs_body_sm);
+  }
+
+  .match_head .btn_glass .ico {
+    width: 28px;
+    height: 28px;
+  }
+
+  .match_head .only_wide {
+    display: none;
+  }
+
+  /* 모바일에서는 카드가 화면 폭을 꽉 채우므로 화면 밖 흐름을 막는다 */
+  .match_list.type_bleed,
+  .video_list.type_bleed {
+    margin-right: 0;
+    padding-right: 0;
+  }
+
+  .match_card {
+    width: 100%;
+    padding: 35px 35px 45px;
+  }
+
+  .match_list > li {
+    width: 100%;
+  }
+
+  .match_date .date {
+    font-size: var(--fs_body);
+  }
+
+  .match_date .place {
+    font-size: var(--fs_body_sm);
+  }
+
+  .match_team {
+    gap: 32px;
+  }
+
+  .match_score .home,
+  .match_score .away {
+    font-size: 36px;
+  }
+
+  .match_score .sep {
+    height: 36px;
+    font-size: 24px;
+  }
+
+  .match_nav {
+    display: flex;
+  }
+
+  /* ---------- INFO ---------- */
+  .info {
+    height: 80px;
+    padding: 0 var(--pad_x);
+  }
+
+  .info .btn_glass {
+    padding: 8px 18px;
+    font-size: var(--fs_body_sm);
+  }
+
+  /* ---------- PLAYER ---------- */
+  .player {
+    min-height: 908px;
+    padding: 120px var(--pad_x);
+  }
+
+  .player_inner {
+    gap: 56px;
+  }
+
+  .player_top,
+  .player_tit_col {
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
+  }
+
+  .player_tit_col {
+    gap: 12px;
+  }
+
+  .player_tit_col .tit_group {
+    gap: 12px;
+  }
+
+  .player_tit_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .player_tit_row .btn_more {
+    display: inline-flex;
+  }
+
+  .player_tit_col > .only_wide_btn {
+    display: none;
+  }
+
+  .player_tit_col .btn_more {
+    align-self: flex-start;
+    gap: 10px;
+    padding: 8px 12px;
+    font-size: var(--fs_body_sm);
+  }
+
+  .player_tit_col .btn_more .ico {
+    width: 18px;
+    height: 18px;
+  }
+
+  .player_con {
+    gap: 32px;
+  }
+
+  .profile_card {
+    gap: 0;
+    width: 169px;
+    justify-content: space-between;
+  }
+
+  .profile_img {
+    height: 186px;
+  }
+
+  .profile_tit {
+    min-height: 62px;
+  }
+
+  .profile_name strong {
+    font-size: var(--fs_body);
+  }
+
+  .profile_name span,
+  .profile_roman {
+    font-size: 12px;
+  }
+
+  .profile_no {
+    font-size: 24px;
+  }
+
+  .player_bottom {
+    justify-content: flex-start;
+    gap: 26px;
+  }
+
+  .player_bottom .pic_main {
+    width: 223px;
+    height: 187px;
+  }
+
+  .player_bottom .pic_col {
+    width: auto;
+  }
+
+  .player_bottom .pic_sub1 {
+    width: 138px;
+    height: 187px;
+  }
+
+  .player_bottom .pic_sub2 {
+    display: none;
+  }
+
+  /* ---------- GALLERY ---------- */
+  .gallery {
+    min-height: 605px;
+    padding: 120px var(--pad_x) 80px;
+  }
+
+  .gallery .blob_1 {
+    width: 117.4%;
+    top: -20%;
+    left: -52%;
+  }
+
+  .gallery_tit {
+    gap: 36px;
+  }
+
+  .gallery_link {
+    font-size: var(--fs_body);
+  }
+
+  .gallery_photos {
+    top: -308px;
+    left: 140.3%;
+    gap: 9px;
+    width: 369px;
+  }
+
+  .gallery_photos .photo_col {
+    gap: 12px;
+    width: 180px;
+  }
+
+  .gallery_photos .photo_col + .photo_col {
+    margin-top: 0;
+  }
+
+  .gallery_photos img {
+    width: 180px;
+    height: 285px;
+  }
+
+  /* ---------- BEARS TV ---------- */
+  .bears_tv {
+    min-height: 560px;
+    padding: 120px var(--pad_x) 80px;
+  }
+
+  .bears_tv_head {
+    align-items: center;
+    padding-bottom: 60px;
+  }
+
+  .bears_tv_head .btn_more {
+    gap: 4px;
+    padding: 4px 12px;
+    font-size: var(--fs_body_sm);
+  }
+
+  .bears_tv_head .btn_more .ico {
+    width: 18px;
+    height: 18px;
+  }
+
+  .video_list > li {
+    width: 100%;
+  }
+
+  .video_card {
+    width: 100%;
+  }
+
+  .video_card .thumb {
+    height: 182px;
+  }
+
+  .video_card .video_tit {
+    font-size: var(--fs_body);
+  }
+
+  .video_card .video_meta {
+    font-size: var(--fs_body_sm);
+  }
+
+  /* ---------- JAMSIL GUIDE ---------- */
+  .jamsil_guide {
+    padding: 160px 0;
+  }
+
+  .guide_tit {
+    gap: 56px;
+    padding: 0 60px 80px;
+  }
+
+  .guide_tit .tit_display {
+    font-size: var(--fs_display);
+  }
+
+  .guide_mascot {
+    top: -43px;
+    left: auto;
+    right: 21px;
+    width: 130px;
+  }
+
+  .guide_list {
+    gap: 30px;
+    width: 100%;
+  }
+
+  .guide_panel,
+  .guide_panel:first-child {
+    padding: 40px;
+  }
+
+  .guide_panel_inner,
+  .guide_panel.type_reverse .guide_panel_inner {
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  .guide_txt,
+  .guide_panel.type_reverse .guide_txt {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0;
+    width: 100%;
+    min-height: 0;
+    text-align: left;
+  }
+
+  .guide_txt_group,
+  .guide_panel.type_reverse .guide_txt_group {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .btn_arrow {
+    width: 36px;
+    height: 36px;
+  }
+
+  .guide_panel_desc {
+    font-size: var(--fs_body);
+  }
+
+  .guide_img,
+  .guide_slide_area {
+    width: 100%;
+  }
+
+  .guide_img {
+    height: 185px;
+  }
+
+  .guide_slide_list img {
+    width: 180px;
+    height: 180px;
+  }
+
+  .guide_shop_item {
+    width: 100%;
+  }
+
+  .guide_shop_item .pic {
+    height: 120px;
+  }
+
+  .guide_shop_desc .shop_name {
+    font-size: var(--fs_body);
+  }
+
+  .guide_shop_desc dt {
+    font-size: var(--fs_body_sm);
+  }
+
+  .guide_shop_desc dd {
+    font-size: var(--fs_body_sm);
+  }
+
+  .deli {
+    display: none;
+  }
+
+  /* ---------- SMOOTH MOVING ---------- */
+  .smoth_moving {
+    padding: 40px 0;
+  }
+
+  /* ---------- SHOP ---------- */
+  .shop {
+    padding: 180px var(--pad_x);
+  }
+
+  .shop_inner {
+    gap: 24px;
+  }
+
+  .shop_head .scroll_count {
+    display: none;
+  }
+
+  .shop_head .shop_tap {
+    flex-direction: row;
+  }
+
+  .shop_head .shop_tap a {
+    padding: 8px 18px;
+    border: 0;
+    font-family: var(--ff_body);
+    font-size: var(--fs_body_sm);
+    font-weight: 500;
+    text-transform: none;
+  }
+
+  .shop_head .shop_tap a:first-child {
+    border: 0;
+  }
+
+  .shop_body {
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .shop_side {
+    width: 100%;
+    min-height: 0;
+  }
+
+  .shop_side .shop_tap {
+    display: none;
+  }
+
+  .shop_sub_tit strong {
+    font-size: var(--fs_body);
+  }
+
+  .shop_sub_tit p {
+    display: none;
+  }
+
+  .shop_list {
+    gap: 18px;
+  }
+
+  .product_card {
+    width: 140px;
+  }
+
+  .product_card .pic {
+    height: 133px;
+  }
+
+  .product_name {
+    height: 34px;
+    font-size: var(--fs_body_sm);
+  }
+
+  .product_price .now {
+    font-size: var(--fs_body_sm);
+  }
+
+  /* ---------- NEWS / EVENT ---------- */
+  .news_event {
+    padding: 120px var(--pad_x);
+  }
+
+  .news_body {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 36px;
+  }
+
+  .news_side {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+    min-height: 0;
+  }
+
+  .news_side p {
+    font-size: var(--fs_body);
+  }
+
+  .news_side .btn_white {
+    padding: 8px 18px;
+    font-size: var(--fs_body_sm);
+  }
+
+  .news_list a {
+    padding: 22px 12px;
+  }
+
+  .news_list .subject,
+  .news_list .date {
+    font-size: var(--fs_body_sm);
+  }
+
+  .tab_list.type_dark .tab_btn {
+    padding: 8px 18px;
+    font-size: var(--fs_body_sm);
+  }
+
+  /* ---------- COMMUNICATION ---------- */
+  .communication {
+    padding: 120px 80px;
+  }
+
+  .communication_inner {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .qna_group {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    order: 2;
+    width: 100%;
+    max-width: none;
+  }
+
+  .qna_tit {
+    text-align: center;
+  }
+
+  .qna_list {
+    gap: 12px;
+  }
+
+  .qna_list a {
+    min-width: 109px;
+    min-height: 41px;
+    padding: 12px 20px;
+    font-size: var(--fs_body_sm);
+  }
+
+  .qna_vid {
+    order: 1;
+    width: 230px;
+    height: 276px;
+    padding: 40px 0;
+  }
+
+  .qna_vid video {
+    width: 100%;
+  }
+
+  /* ---------- FOOTER ---------- */
+  .footer {
+    gap: 0;
+    padding: 1px 0;
+  }
+
+  .sponsor_wrap {
+    gap: 40px;
+    justify-content: flex-start;
+    padding: 14px var(--pad_x);
+  }
+
+  .sponsor_wrap li {
+    width: 86px;
+  }
+
+  .sponsor_wrap img {
+    height: 43px;
+  }
+
+  /* 디자인 순서 : 로고+TOP → SNS → 정책 → 사업자정보 → 저작권 */
+  .footer_con {
+    flex-direction: column;
+    gap: 24px;
+    padding: 30px var(--pad_x);
+  }
+
+  .footer_left {
+    display: contents;
+  }
+
+  .footer_right {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    order: 2;
+    width: 100%;
+    padding-top: 0;
+  }
+
+  .footer_logo_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 11px;
+    order: 1;
+    width: 100%;
+  }
+
+  .footer_policy {
+    order: 3;
+  }
+
+  .footer_info {
+    order: 4;
+  }
+
+  .footer_copy {
+    order: 5;
+  }
+
+  .btn_top {
+    position: static;
+  }
+
+  .footer_logo {
+    width: 160px;
+  }
+
+  .btn_top {
+    padding: 4px;
+  }
+
+  .btn_top span {
+    font-size: var(--fs_body_sm);
+  }
+
+  .footer_policy a,
+  .footer_info_row {
+    font-size: var(--fs_body_sm);
+  }
+
+  .footer_info {
+    gap: 4px;
+  }
+
+  .footer_info_row {
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+  }
+
+  .footer_copy {
+    font-size: 12px;
+  }
+}
+
+/* 아주 좁은 화면 보정 (360px) */
+@media (max-width: 400px) {
+  .communication {
+    padding: 120px var(--pad_x);
+  }
+}
