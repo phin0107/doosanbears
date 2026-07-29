@@ -49,7 +49,7 @@
     right: 0;
     z-index: 10;
     width: max-content;
-    max-width: calc(100vw - var(--pad_x) * 2);
+    max-width: calc(100vw - 8vw * 2);
     height: auto;
     padding: 24px 20px;
     overflow-x: auto;
@@ -60,8 +60,11 @@
     display: block;
   }
 
-  .gnb_list {
-    justify-content: flex-start;
+  .gnb_list .gnb_item{
+    width:14%;
+  }
+  .gnb_list .gnb_item a{
+    font-size: var(--fs_body);
   }
 
   /* ---------- MATCH ---------- */
@@ -86,7 +89,7 @@
   }
 
   .match_head .btn_glass {
-    padding: 12px 18px;
+    padding: 8px 18px;
     font-size: 14px;
   }
 

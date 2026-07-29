@@ -169,17 +169,33 @@
   width: 100%;
 }
 
+
+/* 자식 카드가 줄어들지 않도록 설정 */
+.scroller_track.type_bleed.match_list > * {
+  flex-shrink: 0;            /* 너비 축소 방지 */
+}
+
 .match_list {
   align-items: flex-end;
   gap: 24px;
   padding-bottom: 4px;
+  overflow:visible;
 }
 
 .match_list > li {
   display: flex;
+  flex-wrap: nowrap;  
   flex-direction: column;
   align-items: flex-start;
   gap: 5px;
+  overflow-x: auto;         
+  -webkit-overflow-scrolling: touch;
+  transition: 0.3s ease;
+}
+
+.match_list > li:hover,
+.match_list > li:focus-visible {
+  transform: translateY(-6px);
 }
 
 .match_card {
@@ -192,12 +208,6 @@
   background: var(--grad_match);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  transition: transform 0.3s ease;
-}
-
-a.match_card:hover,
-a.match_card:focus-visible {
-  transform: translateY(-6px);
 }
 
 .match_desc {
@@ -1445,6 +1455,7 @@ a.match_card:focus-visible {
 .reveal.is_shown {
   opacity: 1;
   transform: none;
+  overflow:hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
