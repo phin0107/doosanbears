@@ -38,6 +38,7 @@
   function initMenuToggle() {
     var toggle = document.getElementById('menu_toggle');
     var gnb = document.getElementById('gnb');
+    var closeBtn = document.getElementById('gnb_close');
     if (!toggle || !gnb) return;
 
     var label = toggle.querySelector('.blind');
@@ -53,6 +54,14 @@
     }
 
     toggle.addEventListener('click', handleMenuToggle);
+
+    /* 닫기 버튼 클릭 시 메뉴 닫기 */
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        setOpen(false);
+        toggle.focus();
+      });
+    }
 
     /* 바깥 영역 클릭 시 닫기 */
     document.addEventListener('click', function (e) {

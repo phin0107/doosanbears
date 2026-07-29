@@ -195,7 +195,133 @@
   }
 
   /* ----------------------------------------------------------------------
-     5. 마퀴 : 콘텐츠 폭에 맞춰 재생 시간 보정
+     5. 갤러리 사진 무한 흐름
+     - 1번 열은 위로, 2번 열은 아래로 천천히 계속 이동
+     - 마우스를 올리면 속도가 0으로 서서히 줄어들고, 벗어나면 서서히 회복
+     ---------------------------------------------------------------------- */
+  function initGalleryFlow() {
+    var wrap = document.querySelector('.gallery_photos');
+    if (!wrap) return;
+
+    var cols = wrap.querySelectorAll('.photo_col');
+    if (cols.length < 2) return;
+
+    var shouldAnimate = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!shouldAnimate) return;
+
+    var SPEED = 52;      /* 초당 이동 픽셀 */
+    var EASE_TAU = 0.25; /* 감속·가속 시간 상수(초) */
+
+    /* 끊김 없이 순환하도록 원본 한 벌을 복제 */
+    Array.prototype.forEach.call(cols, function (col) {
+      Array.prototype.slice.call(col.children).forEach(function (node) {
+        var clone = node.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        col.appendChild(clone);
+      });
+    });
+
+    var items = Array.prototype.map.call(cols, function (col, index) {
+      return { el: col, dir: index === 0 ? -1 : 1, loop: 0, pos: 0 };
+    });
+
+    /* 복제 후 기준: 전체높이 = 2*loop - gap 이므로 loop = (전체높이 + gap) / 2 */
+    function measure() {
+      items.forEach(function (item) {
+        var gap = parseFloat(window.getComputedStyle(item.el).rowGap) || 0;
+        item.loop = (item.el.offsetHeight + gap) / 2;
+        if (item.loop > 0) item.pos = item.pos % item.loop;
+      });
+    }
+
+    var speed = 1;
+    var target = 1;
+    var last = 0;
+    var rafId = null;
+
+    function draw() {
+      items.forEach(function (item) {
+        if (item.loop <= 0) return;
+        var y = item.dir < 0 ? -item.pos : item.pos - item.loop;
+        item.el.style.transform = 'translateY(' + y + 'px)';
+      });
+    }
+
+    function handleFrame(now) {
+      var dt = last ? Math.min((now - last) / 1000, 0.05) : 0;
+      last = now;
+
+      /* 프레임 간격과 무관하게 일정한 감속 곡선 */
+      speed += (target - speed) * (1 - Math.exp(-dt / EASE_TAU));
+
+      items.forEach(function (item) {
+        if (item.loop <= 0) return;
+        item.pos = (item.pos + SPEED * speed * dt) % item.loop;
+      });
+
+      draw();
+      rafId = window.requestAnimationFrame(handleFrame);
+    }
+
+    function start() {
+      if (rafId !== null) return;
+      last = 0;
+      rafId = window.requestAnimationFrame(handleFrame);
+    }
+
+    function stop() {
+      if (rafId === null) return;
+      window.cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+
+    wrap.addEventListener('mouseenter', function handleMouseEnter() {
+      target = 0;
+    });
+
+    wrap.addEventListener('mouseleave', function handleMouseLeave() {
+      target = 1;
+    });
+
+    var resizeTimer = null;
+    window.addEventListener('resize', function handleResize() {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(function () {
+        measure();
+        draw();
+      }, 150);
+    });
+
+    /* 화면 밖이거나 탭이 비활성일 때는 정지해 불필요한 연산을 줄인다 */
+    var inView = false;
+    var section = document.querySelector('.gallery');
+
+    function sync() {
+      if (inView && !document.hidden) start();
+      else stop();
+    }
+
+    if (section && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          inView = entry.isIntersecting;
+        });
+        sync();
+      }, { rootMargin: '200px 0px' }).observe(section);
+    } else {
+      inView = true;
+      sync();
+    }
+
+    document.addEventListener('visibilitychange', sync);
+
+    wrap.classList.add('is_flowing');
+    measure();
+    draw();
+  }
+
+  /* ----------------------------------------------------------------------
+     6. 마퀴 : 콘텐츠 폭에 맞춰 재생 시간 보정
      ---------------------------------------------------------------------- */
   function initMarquee() {
     var track = document.querySelector('.marquee_track');
@@ -219,6 +345,7 @@
     initTabs();
     initChips();
     initReveal();
+    initGalleryFlow();
     initMarquee();
   });
 
@@ -226,3 +353,28 @@
     window.dispatchEvent(new Event('resize'));
   });
 })();
+
+
+// 스크롤 감지 로직
+document.addEventListener('DOMContentLoaded', () => {
+  const mascot = document.querySelector('.guide_mascot');
+  // 마스코트가 포함된 부모 섹션 (클래스명에 맞게 수정하세요)
+  const targetSection = document.querySelector('.jamsil_guide_section');
+
+  if (!targetSection || !mascot) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      // 섹션이 화면에 20% 이상 보일 때 작동
+      if (entry.isIntersecting) {
+        mascot.classList.add('is-active');
+        // 한 번 실행된 후 감지를 중단하고 싶다면 아래 주석 해제
+        // observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.4 // 섹션이 화면에 20% 이상 들어왔을 때 트리거
+  });
+
+  observer.observe(targetSection);
+});
