@@ -118,9 +118,13 @@
      ---------------------------------------------------------------------- */
   function initTabs() {
     var groups = document.querySelectorAll('[role="tablist"].tab_list');
+    console.log('Found tab groups:', groups.length);
 
     Array.prototype.forEach.call(groups, function (group) {
       var tabs = group.querySelectorAll('.tab_btn');
+      var newsEventSection = group.closest('.news_event');
+
+      console.log('Processing tab group, is news_event:', !!newsEventSection);
 
       function activate(target) {
         Array.prototype.forEach.call(tabs, function (tab) {
@@ -132,6 +136,20 @@
           var panel = panelId ? document.getElementById(panelId) : null;
           if (panel) panel.hidden = !isCurrent;
         });
+
+        /* news_event 섹션의 탭 변경 시 텍스트 업데이트 */
+        if (newsEventSection) {
+          var titSection = newsEventSection.querySelector('.tit_section');
+          var newsSide = newsEventSection.querySelector('.news_side p');
+          var isNewsTab = target.textContent.trim() === 'NEWS';
+
+          if (titSection) {
+            titSection.textContent = isNewsTab ? 'NEWS' : 'event';
+          }
+          if (newsSide) {
+            newsSide.innerHTML = isNewsTab ? '두산베어스의<br>뉴스' : '두산베어스의<br>이벤트 소식';
+          }
+        }
 
         window.dispatchEvent(new Event('resize'));
       }
@@ -355,25 +373,22 @@
 })();
 
 
-// 스크롤 감지 로직
+/* 마스코트 애니메이션 스크롤 트리거 */
 document.addEventListener('DOMContentLoaded', () => {
   const mascot = document.querySelector('.guide_mascot');
-  // 마스코트가 포함된 부모 섹션 (클래스명에 맞게 수정하세요)
-  const targetSection = document.querySelector('.jamsil_guide_section');
+  const targetSection = document.querySelector('.jamsil_guide');
 
   if (!targetSection || !mascot) return;
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      // 섹션이 화면에 20% 이상 보일 때 작동
       if (entry.isIntersecting) {
-        mascot.classList.add('is-active');
-        // 한 번 실행된 후 감지를 중단하고 싶다면 아래 주석 해제
-        // observer.unobserve(entry.target);
+        mascot.classList.add('is_animated');
+        observer.unobserve(entry.target);
       }
     });
   }, {
-    threshold: 0.4 // 섹션이 화면에 20% 이상 들어왔을 때 트리거
+    threshold: 0.2
   });
 
   observer.observe(targetSection);

@@ -874,6 +874,11 @@
   width: 240px;
   pointer-events: none;
   animation: moveToBottom 12s ease-in-out forwards;
+  animation-play-state: paused;
+}
+
+.guide_mascot.is_animated {
+  animation-play-state: running;
 }
 
 .guide_mascot img {
