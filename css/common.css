@@ -10,8 +10,8 @@
 @font-face {
   font-family: 'VITRO CORE';
   src: local('VITRO CORE TTF'), local('VITRO CORE'),
-       url('../fonts/VITRO_CORE.woff2') format('woff2'),
-       url('../fonts/VITRO_CORE.ttf') format('truetype');
+       url('../fonts/VITRO CORE TTF.woff2') format('woff2'),
+       url('../fonts/VITRO CORE TTF.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
   font-display: swap;
@@ -449,22 +449,25 @@ button[disabled],
   gap: 4px;
 }
 
-.scroll_dots span {
+.scroll_dots > * {
   width: 14px;
   height: 2px;
+  padding: 0;
+  border: 0;
   background: #555;
+  cursor: pointer;
   transition: background-color 0.25s ease;
 }
 
-.scroll_dots span.is_current {
+.scroll_dots > *.is_current {
   background: var(--c_white);
 }
 
-.scroll_dots.type_dark span {
+.scroll_dots.type_dark > * {
   background: var(--c_gray_4);
 }
 
-.scroll_dots.type_dark span.is_current {
+.scroll_dots.type_dark > *.is_current {
   background: var(--c_navy);
 }
 
@@ -564,7 +567,7 @@ button[disabled],
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: var(--header_inner);
+  /* max-width: var(--header_inner); */
   margin: 0 auto;
 }
 
@@ -612,6 +615,15 @@ button[disabled],
   backdrop-filter: blur(8.4px);
   -webkit-backdrop-filter: blur(8.4px);
   transition: height 0.35s ease;
+}
+
+/* 모바일 전체 메뉴에서만 표시하는 로고·닫기 영역 */
+.gnb_header {
+  display: none;
+}
+
+.gnb_my_mobile {
+  display: none;
 }
 
 .gnb_list {

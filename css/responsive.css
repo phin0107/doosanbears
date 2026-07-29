@@ -33,13 +33,17 @@
 
   .header_util .util_btn.type_menu {
     display: flex;
-    order: -1;
+    order: 1;
   }
 
   .header_util .util_btn.type_my,
   .header_util .util_btn.type_search {
     width: 24px;
     height: 24px;
+  }
+
+  .header_util .util_btn.type_search {
+    order: -1;
   }
 
   .gnb {
@@ -371,6 +375,248 @@
 }
 
 /* ==========================================================================
+   TABLET MENU: header 아래 드롭다운
+   ========================================================================== */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .gnb {
+    display: none;
+    position: fixed;
+    top: calc(var(--header_top) + var(--gnb_height) + 12px);
+    left: 170px;
+    right: auto;
+    width: min(852px, calc(100vw - (var(--pad_x) * 2)));
+    height: var(--gnb_height);
+    padding: 14px 12px 18px;
+    overflow: hidden;
+    border-radius: var(--r_pill);
+    background: rgba(24, 25, 40, 0.92);
+    backdrop-filter: blur(8.4px);
+    -webkit-backdrop-filter: blur(8.4px);
+    flex-direction: row;
+    transition: height 0.35s ease;
+  }
+
+  .gnb.is_open {
+    display: block;
+    height: 460px;
+  }
+
+  .header.is_fixed .gnb {
+    top: calc(var(--gnb_height) + 36px);
+    background: rgba(24, 25, 40, 0.92);
+    backdrop-filter: blur(8.4px);
+    -webkit-backdrop-filter: blur(8.4px);
+  }
+
+  .gnb_header {
+    display: none;
+  }
+
+  .gnb_list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .gnb_list .gnb_item {
+    align-items: center;
+    gap: 45px;
+    width: calc(100% / 7);
+    padding: 0 6px;
+  }
+
+  .gnb_list .gnb_item a,
+  .gnb_tit,
+  .gnb_sub a {
+    align-items: center;
+    justify-content: center;
+    padding-left: 6px;
+    font-size: 14px;
+  }
+
+  .gnb_tit {
+    margin-bottom: 0;
+    padding: 10px 6px;
+    border-bottom: 0;
+  }
+
+  .gnb_sub {
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 0;
+    padding-left: 0;
+  }
+
+  /* ---------- MATCH : desktop slider behavior ---------- */
+  .match_list.type_bleed {
+    margin-right: calc(var(--pad_x) * -1);
+    padding-right: var(--pad_x);
+  }
+
+  .match_list > li {
+    flex: 0 0 auto;
+    width: auto;
+  }
+
+  .match_card {
+    width: 424px;
+  }
+
+  /* ---------- PLAYER : Figma tablet layout ---------- */
+  .player_legacy {
+    display: none;
+  }
+
+  .player.player_desktop {
+    display: block;
+    min-height: 0;
+    padding: 120px var(--pad_x);
+  }
+
+  .player_desktop_inner {
+    width: 100%;
+    max-width: var(--inner_wide);
+    margin: 0 auto;
+  }
+
+  .player_desktop_head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .player_desktop_title {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 184px;
+  }
+
+  .player_desktop_title .tit_section {
+    font-size: 52px;
+  }
+
+  .player_desktop_title .tab_list {
+    width: 100%;
+  }
+
+  .player_desktop_title .tab_btn {
+    flex: 1 1 0;
+  }
+
+  .player_desktop_head .btn_more {
+    margin-top: 8px;
+  }
+
+  .desktop_player_list {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+    width: 100%;
+    margin-top: 56px;
+  }
+
+  .desktop_player_row,
+  .desktop_player_row.is_current,
+  .desktop_player_row.is_stack,
+  .desktop_player_row.is_stack_far {
+    display: flex;
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    align-items: center;
+    gap: 36px;
+    width: 100%;
+    height: 442px;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .desktop_player_side {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 21px;
+    width: 184px;
+  }
+
+  .desktop_player_pager {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    color: var(--c_navy);
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .desktop_player_pager > :nth-child(4) {
+    color: var(--c_gray);
+  }
+
+  .pager_arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: currentColor;
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .desktop_player_photos {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 36px;
+    min-width: 0;
+    height: 442px;
+    overflow: hidden;
+  }
+
+  .desktop_player_photos > img,
+  .desktop_player_placeholder {
+    display: block;
+    flex: none;
+    height: 442px;
+    overflow: hidden;
+    border-radius: var(--r_md);
+  }
+
+  .desktop_player_photos > img {
+    object-fit: cover;
+  }
+
+  .desktop_player_photos > :nth-child(1) {
+    width: 328px;
+  }
+
+  .desktop_player_photos > :nth-child(2) {
+    width: 192px;
+  }
+
+  .desktop_player_photos > :nth-child(3) {
+    width: 328px;
+  }
+
+  .desktop_player_placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.25);
+    color: var(--c_navy);
+    font-size: 16px;
+  }
+}
+
+/* ==========================================================================
    MOBILE
    ========================================================================== */
 @media (max-width: 767px) {
@@ -415,23 +661,165 @@
   }
 
   .gnb {
-    max-width: calc(100vw - 40px);
-    padding: 20px 16px;
+    width: 100%;
+    height: 100dvh;
+    max-width: none;
+    padding: 0;
+    overflow: hidden;
   }
 
-  .gnb_item {
-    width: 104px;
-    padding: 0 12px;
-    gap: 24px;
+  .gnb_header {
+    flex: 0 0 53px;
+    width: 100%;
+    height: 53px;
+    padding: 10px 20px;
+    border-bottom: 0;
   }
 
-  .gnb_sub {
-    gap: 14px;
+  .gnb_logo {
+    width: 56px;
+    height: 33px;
+  }
+
+  .gnb_header_actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .gnb_search,
+  .gnb_close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: var(--c_white);
+  }
+
+  .gnb_search img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .gnb_list {
+    position: relative;
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .gnb_list .gnb_item {
+    display: block;
+    width: 140px;
+    height: 58px;
+    padding: 0;
+  }
+
+  /* 모바일 시안의 1차 메뉴는 BEARS / GAME / STATS / STORY / TICKET / SHOP 순서 */
+  .gnb_list .gnb_item:nth-child(2) {
+    display: none;
   }
 
   .gnb_tit,
-  .gnb_sub a {
-    font-size: var(--fs_body_sm);
+  .gnb_list .gnb_item a.gnb_tit {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 140px;
+    height: 58px;
+    margin: 0;
+    padding: 0 20px;
+    border: 0;
+    color: var(--c_white);
+    font-family: var(--ff_title);
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .gnb_list .gnb_item.is_active > .gnb_tit,
+  .gnb_list .gnb_item.is_active > .gnb_tit:link,
+  .gnb_list .gnb_item.is_active > .gnb_tit:visited {
+    background: #e8ecef;
+    color: #0a0f20 !important;
+  }
+
+  .gnb_sub {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 140px;
+    width: calc(100vw - 140px);
+    height: 100%;
+    margin: 0;
+    padding: 0 16px;
+    overflow-y: auto;
+    background: #e8ecef;
+  }
+
+  .gnb_item.is_active .gnb_sub {
+    display: block;
+  }
+
+  .gnb_sub li {
+    height: 58px;
+    border-bottom: 1px solid rgba(10, 15, 32, 0.08);
+  }
+
+  .gnb_sub a,
+  .gnb_list .gnb_item .gnb_sub a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: 58px;
+    padding: 0;
+    color: #0a0f20;
+    font-family: var(--ff_body);
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .gnb_sub a::after,
+  .gnb_tit_link::after {
+    position: static;
+    width: 8px;
+    height: 8px;
+    margin-left: 12px;
+    border: solid var(--c_gray);
+    border-width: 0 1px 1px 0;
+    background: none;
+    opacity: 1;
+    transform: rotate(-45deg);
+  }
+
+  .gnb_tit_link::after {
+    display: none;
+  }
+
+  .gnb_my_mobile {
+    position: absolute;
+    bottom: 17px;
+    left: 20px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 24px;
+    color: var(--c_white);
+    font-family: var(--ff_title);
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .gnb_my_mobile img {
+    width: 24px;
+    height: 24px;
   }
 
   /* ---------- MATCH ---------- */
@@ -484,11 +872,15 @@
     display: none;
   }
 
-  /* 모바일에서는 카드가 화면 폭을 꽉 채우므로 화면 밖 흐름을 막는다 */
-  .match_list.type_bleed,
+  /* 경기 카드는 다음 카드가 보이도록 화면 가장자리까지 흐르게 한다 */
   .video_list.type_bleed {
     margin-right: 0;
     padding-right: 0;
+  }
+
+  .match_list.type_bleed {
+    margin-right: calc(var(--pad_x) * -1);
+    padding-right: var(--pad_x);
   }
 
   .match_card {
@@ -497,7 +889,8 @@
   }
 
   .match_list > li {
-    width: 100%;
+    flex: 0 0 calc(100% - 60px);
+    width: calc(100% - 60px);
   }
 
   .match_date .date {

@@ -179,7 +179,45 @@
   align-items: flex-end;
   gap: 24px;
   padding-bottom: 4px;
-  overflow:visible;
+
+}
+
+.match .scroller_track {
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.match .scroller_track.is_dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+  user-select: none;
+}
+
+.match_nav {
+  min-height: 24px;
+}
+
+.match_nav .scroll_dots {
+  gap: 8px;
+}
+
+.match_nav .scroll_dots > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--c_white);
+  color: var(--c_gray);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.match_nav .scroll_dots > button.is_current {
+  background: var(--c_red);
 }
 
 .match_list > li {
@@ -595,6 +633,199 @@
   object-position: top center;
 }
 
+/* Desktop player detail layout (Figma node 720:4184) */
+.player_desktop {
+  display: none;
+}
+
+@media (min-width: 1280px) {
+  .player_legacy {
+    display: none;
+  }
+
+  .player.player_desktop {
+    display: block;
+    min-height: 0;
+    padding: 120px var(--pad_x);
+  }
+
+  .player_desktop_inner {
+    width: 100%;
+    max-width: var(--inner);
+    margin: 0 auto;
+  }
+
+  .player_desktop_head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .player_desktop_title {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 184px;
+  }
+
+  .player_desktop_title .tab_list {
+    width: 100%;
+  }
+
+  .player_desktop_title .tab_btn {
+    flex: 1 1 0;
+  }
+
+  .player_desktop_head .btn_more {
+    margin-top: 8px;
+  }
+
+  .desktop_player_list {
+    position: relative;
+    height: 442px;
+    margin-top: 56px;
+    overflow: hidden;
+  }
+
+  .desktop_player_row {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 442px;
+    display: flex;
+    align-items: center;
+    gap: 21px;
+    min-width: 0;
+    opacity: 0;
+    pointer-events: none;
+    scroll-margin-top: 120px;
+    transition: opacity 0.42s ease;
+    background:var(--c_white);
+  }
+
+  .desktop_player_row.is_current {
+    z-index: 3;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .desktop_player_row.is_stack {
+    top: 56px;
+    z-index: 2;
+    opacity: 0;
+  }
+
+  .desktop_player_row.is_stack_far {
+    top: 112px;
+    z-index: 1;
+    opacity: 0;
+  }
+
+  .desktop_player_row.is_exiting_next {
+    z-index: 4;
+    opacity: 0;
+  }
+
+  .desktop_player_row.is_exiting_prev {
+    z-index: 4;
+    opacity: 0;
+  }
+
+  .desktop_player_side {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 21px;
+    width: 184px;
+  }
+
+  .desktop_player_side .profile_card {
+    cursor: pointer;
+  }
+
+  .desktop_player_pager {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    color: var(--c_navy);
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .desktop_player_pager > :nth-child(4) {
+    color: var(--c_gray);
+  }
+
+  .pager_arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    color: inherit;
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .pager_arrow.is_disabled {
+    color: var(--c_gray);
+    opacity: 0.45;
+  }
+
+  .desktop_player_photos {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+    min-width: 0;
+  }
+
+  .desktop_player_photos > img,
+  .desktop_player_placeholder {
+    display: block;
+    height: 442px;
+    overflow: hidden;
+    border-radius: var(--r_md);
+  }
+
+  .desktop_player_photos > img {
+    object-fit: cover;
+  }
+
+  .desktop_player_photos > :nth-child(1) {
+    width: 443px;
+  }
+
+  .desktop_player_photos > :nth-child(2) {
+    width: 192px;
+  }
+
+  .desktop_player_photos > :nth-child(3) {
+    width: 328px;
+  }
+
+  .desktop_player_placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.25);
+    color: var(--c_navy);
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .desktop_player_row {
+    transition: none;
+  }
+}
+
 /* --------------------------------------------------------------------------
    05. GALLERY
    -------------------------------------------------------------------------- */
@@ -869,6 +1100,7 @@
 }
 .guide_mascot {
   position: absolute;
+  z-index: 10;
   top: 175px;
   left: 498px;
   width: 240px;

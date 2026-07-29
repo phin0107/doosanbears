@@ -42,11 +42,41 @@
     if (!toggle || !gnb) return;
 
     var label = toggle.querySelector('.blind');
+    var menuItems = gnb.querySelectorAll('.gnb_item');
+    var lockedScrollY = 0;
+    var isScrollLocked = false;
+
+    function isMobileMenu() {
+      return window.matchMedia('(max-width: 767px)').matches;
+    }
+
+    function lockPageScroll() {
+      if (isScrollLocked) return;
+      lockedScrollY = window.scrollY;
+      document.body.classList.add('is_menu_locked');
+      document.body.style.position = 'fixed';
+      document.body.style.top = '-' + lockedScrollY + 'px';
+      document.body.style.width = '100%';
+      isScrollLocked = true;
+    }
+
+    function unlockPageScroll() {
+      if (!isScrollLocked) return;
+      document.body.classList.remove('is_menu_locked');
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, lockedScrollY);
+      isScrollLocked = false;
+    }
 
     function setOpen(isOpen) {
       gnb.classList.toggle('is_open', isOpen);
       toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       if (label) label.textContent = isOpen ? '전체 메뉴 닫기' : '전체 메뉴 열기';
+
+      if (isOpen && isMobileMenu()) lockPageScroll();
+      else unlockPageScroll();
     }
 
     function handleMenuToggle() {
@@ -54,6 +84,26 @@
     }
 
     toggle.addEventListener('click', handleMenuToggle);
+
+    function setActiveMenu(activeItem) {
+      menuItems.forEach(function (menuItem) {
+        var menuTitle = menuItem.querySelector('.gnb_tit');
+        var isActive = menuItem === activeItem;
+        menuItem.classList.toggle('is_active', isActive);
+        if (menuTitle) menuTitle.classList.toggle('is_active', isActive);
+      });
+    }
+
+    menuItems.forEach(function (item, index) {
+      var title = item.querySelector('.gnb_tit');
+      if (index === 0) setActiveMenu(item);
+      if (!title) return;
+      title.addEventListener('click', function (e) {
+        if (!isMobileMenu()) return;
+        e.preventDefault();
+        setActiveMenu(item);
+      });
+    });
 
     /* 닫기 버튼 클릭 시 메뉴 닫기 */
     if (closeBtn) {
@@ -81,6 +131,7 @@
     /* 데스크톱 폭으로 넓어지면 상태 초기화 */
     window.addEventListener('resize', function () {
       if (window.innerWidth >= DESKTOP_MIN) setOpen(false);
+      else if (!isMobileMenu()) unlockPageScroll();
     });
   }
 

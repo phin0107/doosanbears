@@ -29,12 +29,40 @@
 
     function getPageCount() {
       if (track.clientWidth <= 0) return 1;
-      return Math.max(1, Math.ceil(track.scrollWidth / track.clientWidth));
+      var fixedPageCount = parseInt(root.getAttribute('data-pager-count'), 10);
+      if (fixedPageCount > 0) return fixedPageCount;
+      if (root.hasAttribute('data-page-by-card')) return Math.max(1, track.children.length);
+      var maxScroll = track.scrollWidth - track.clientWidth;
+      return Math.max(1, Math.ceil(maxScroll / track.clientWidth) + 1);
     }
 
     function getCurrentPage() {
       if (track.clientWidth <= 0) return 1;
+      var fixedPageCount = parseInt(root.getAttribute('data-pager-count'), 10);
+      if (fixedPageCount > 1) {
+        var fixedMaxScroll = track.scrollWidth - track.clientWidth;
+        if (fixedMaxScroll <= 0) return 1;
+        return Math.min(fixedPageCount, Math.round(track.scrollLeft / fixedMaxScroll * (fixedPageCount - 1)) + 1);
+      }
+      if (root.hasAttribute('data-page-by-card')) {
+        var closestIndex = 0;
+        var closestDistance = Infinity;
+        Array.prototype.forEach.call(track.children, function (item, index) {
+          var distance = Math.abs(getCardScrollLeft(item) - track.scrollLeft);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = index;
+          }
+        });
+        return closestIndex + 1;
+      }
       return Math.min(getPageCount(), Math.round(track.scrollLeft / track.clientWidth) + 1);
+    }
+
+    function getCardScrollLeft(card) {
+      var maxScroll = track.scrollWidth - track.clientWidth;
+      var centeredLeft = card.offsetLeft - (track.clientWidth - card.offsetWidth) / 2;
+      return Math.max(0, Math.min(centeredLeft, maxScroll));
     }
 
     function buildDots() {
@@ -44,7 +72,29 @@
 
       dots.textContent = '';
       for (var i = 0; i < count; i += 1) {
-        dots.appendChild(document.createElement('span'));
+        var dot = document.createElement(root.hasAttribute('data-pager') ? 'button' : 'span');
+        if (dot.tagName === 'BUTTON') {
+          dot.type = 'button';
+          dot.setAttribute('aria-label', String(i + 1) + '번째 페이지 보기');
+          dot.addEventListener('click', (function (pageIndex) {
+            return function () {
+              var fixedPageCount = parseInt(root.getAttribute('data-pager-count'), 10);
+              if (fixedPageCount > 1) {
+                var fixedMaxScroll = track.scrollWidth - track.clientWidth;
+                track.scrollTo({ left: fixedMaxScroll * pageIndex / (fixedPageCount - 1), behavior: 'smooth' });
+                return;
+              }
+              if (root.hasAttribute('data-page-by-card')) {
+                var targetCard = track.children[pageIndex];
+                if (targetCard) track.scrollTo({ left: getCardScrollLeft(targetCard), behavior: 'smooth' });
+                return;
+              }
+              var maxScroll = track.scrollWidth - track.clientWidth;
+              track.scrollTo({ left: Math.min(track.clientWidth * pageIndex, maxScroll), behavior: 'smooth' });
+            };
+          })(i));
+        }
+        dots.appendChild(dot);
       }
     }
 
@@ -62,7 +112,9 @@
       if (dots) {
         buildDots();
         Array.prototype.forEach.call(dots.children, function (dot, i) {
-          dot.classList.toggle('is_current', i === page - 1);
+          var isCurrent = i === page - 1;
+          dot.classList.toggle('is_current', isCurrent);
+          if (dot.tagName === 'BUTTON') dot.setAttribute('aria-current', isCurrent ? 'page' : 'false');
         });
       }
 
@@ -102,8 +154,107 @@
       });
     }
 
+    if (root.hasAttribute('data-click-slide')) {
+      Array.prototype.forEach.call(track.querySelectorAll('.match_list > li'), function (card) {
+        card.addEventListener('click', function (event) {
+          if (hasDragged) return;
+          event.preventDefault();
+          event.stopPropagation();
+          handleSliderMove(1);
+        });
+      });
+    }
+
     track.addEventListener('scroll', render, { passive: true });
     window.addEventListener('resize', render);
+
+    if (root.hasAttribute('data-drag')) {
+      var isDragging = false;
+      var startX = 0;
+      var startScrollLeft = 0;
+      var hasDragged = false;
+      var dragDistance = 0;
+
+      track.addEventListener('pointerdown', function (event) {
+        if (event.pointerType === 'mouse' && event.button !== 0) return;
+        isDragging = true;
+        hasDragged = false;
+        startX = event.clientX;
+        startScrollLeft = track.scrollLeft;
+        dragDistance = 0;
+        track.classList.add('is_dragging');
+        track.setPointerCapture(event.pointerId);
+      });
+
+      track.addEventListener('pointermove', function (event) {
+        if (!isDragging) return;
+        var distance = event.clientX - startX;
+        dragDistance = distance;
+        if (Math.abs(distance) > 4) hasDragged = true;
+        track.scrollLeft = startScrollLeft - distance;
+      });
+
+      function stopDragging(event) {
+        if (!isDragging) return;
+        isDragging = false;
+        track.classList.remove('is_dragging');
+        if (track.hasPointerCapture(event.pointerId)) track.releasePointerCapture(event.pointerId);
+
+        if (event.type === 'pointerup' && Math.abs(dragDistance) > 36) {
+          var direction = dragDistance < 0 ? 1 : -1;
+          track.scrollTo({ left: startScrollLeft + getStep() * direction, behavior: 'smooth' });
+        }
+      }
+
+      track.addEventListener('pointerup', stopDragging);
+      track.addEventListener('pointercancel', stopDragging);
+      track.addEventListener('click', function (event) {
+        if (!hasDragged) return;
+        event.preventDefault();
+        hasDragged = false;
+      }, true);
+    }
+
+    var autoplayDelay = parseInt(root.getAttribute('data-autoplay'), 10);
+    var autoplayTimer = null;
+
+    function stopAutoplay() {
+      if (autoplayTimer) window.clearTimeout(autoplayTimer);
+      autoplayTimer = null;
+    }
+
+    function autoplayNext() {
+      var maxScroll = track.scrollWidth - track.clientWidth;
+      if (maxScroll <= 0 || document.hidden || window.innerWidth > 767) return;
+
+      if (track.scrollLeft >= maxScroll - 1) {
+        track.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        handleSliderMove(1);
+      }
+    }
+
+    function startAutoplay() {
+      stopAutoplay();
+      if (!autoplayDelay || window.innerWidth > 767) return;
+      autoplayTimer = window.setTimeout(function runAutoplay() {
+        autoplayNext();
+        autoplayTimer = window.setTimeout(runAutoplay, autoplayDelay);
+      }, autoplayDelay);
+    }
+
+    if (autoplayDelay) {
+      track.addEventListener('pointerdown', stopAutoplay);
+      track.addEventListener('pointerup', startAutoplay);
+      track.addEventListener('pointercancel', startAutoplay);
+      track.addEventListener('click', startAutoplay);
+      window.addEventListener('resize', startAutoplay);
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) stopAutoplay();
+        else startAutoplay();
+      });
+      startAutoplay();
+    }
 
     render();
   }
@@ -356,6 +507,59 @@
   }
 
   /* ----------------------------------------------------------------------
+     7. Desktop PLAYER: stacked-card pager
+     ---------------------------------------------------------------------- */
+  function initDesktopPlayerStack() {
+    if (window.innerWidth < 1280) return;
+    var list = document.querySelector('.desktop_player_list');
+    if (!list) return;
+
+    var rows = Array.prototype.slice.call(list.querySelectorAll('.desktop_player_row'));
+    if (!rows.length) return;
+
+    var currentIndex = 0;
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function updateStack(index) {
+      rows.forEach(function (row, rowIndex) {
+        row.classList.remove('is_current', 'is_stack', 'is_stack_far');
+        var distance = (rowIndex - index + rows.length) % rows.length;
+
+        if (rowIndex === index) row.classList.add('is_current');
+        else if (distance === 1) row.classList.add('is_stack');
+        else if (distance === 2) row.classList.add('is_stack_far');
+      });
+    }
+
+    function moveTo(nextIndex, direction) {
+      if (nextIndex === currentIndex) return;
+
+      var previous = rows[currentIndex];
+      previous.classList.add(direction === 'next' ? 'is_exiting_next' : 'is_exiting_prev');
+
+      currentIndex = nextIndex;
+      updateStack(currentIndex);
+
+      window.setTimeout(function () {
+        previous.classList.remove('is_exiting_next', 'is_exiting_prev');
+      }, reduceMotion.matches ? 0 : 650);
+    }
+
+    list.addEventListener('click', function (event) {
+      var control = event.target.closest('.desktop_player_pager a[href^="#desktop_player_"]');
+      if (!control) return;
+
+      event.preventDefault();
+      var target = document.querySelector(control.getAttribute('href'));
+      var nextIndex = rows.indexOf(target);
+      var direction = control.getAttribute('aria-label') === '다음 선수' ? 'next' : 'prev';
+      if (nextIndex >= 0) moveTo(nextIndex, direction);
+    });
+
+    updateStack(currentIndex);
+  }
+
+  /* ----------------------------------------------------------------------
      초기화
      ---------------------------------------------------------------------- */
   document.addEventListener('DOMContentLoaded', function () {
@@ -365,6 +569,7 @@
     initReveal();
     initGalleryFlow();
     initMarquee();
+    initDesktopPlayerStack();
   });
 
   window.addEventListener('load', function () {
