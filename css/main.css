@@ -184,19 +184,19 @@
 
 .match_list > li {
   display: flex;
-  flex-wrap: nowrap;  
+  flex-wrap: nowrap;
   flex-direction: column;
   align-items: flex-start;
   gap: 5px;
-  overflow-x: auto;         
-  -webkit-overflow-scrolling: touch;
   transition: 0.3s ease;
 }
 
-.match_list > li:hover,
+
+
+/* .match_list > li:hover,
 .match_list > li:focus-visible {
   transform: translateY(-6px);
-}
+} */
 
 .match_card {
   display: flex;
@@ -297,7 +297,7 @@
 
 /* 모바일 슬라이더 컨트롤 */
 .match_nav {
-  display: none;
+  display: flex;
 }
 
 /* --------------------------------------------------------------------------
@@ -364,6 +364,7 @@
   margin: 0 auto;
 }
 
+
 .player_top {
   display: flex;
   align-items: flex-start;
@@ -402,13 +403,30 @@
 .player_con {
   display: flex;
   flex-direction: column;
-  gap: 64px;
   flex: 1 1 auto;
   min-width: 0;
 }
 
 .profile_list {
   gap: 21px;
+}
+.player .scroll_nav button{
+  color: #555;
+}
+
+.player  .scroll_dots span{
+  /* background-color: #8f1616; */
+}
+
+.scroll_dots span.is_current {
+  background-color: var(--c_red);
+}
+
+/* 탭별로 슬라이더가 독립 동작하도록 패널 자체가 slider 역할을 한다 */
+.profile_panel {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
 }
 
 .profile_panel[hidden] {
@@ -430,7 +448,6 @@
 .profile_card:hover,
 .profile_card:focus-within {
   background: rgba(102, 104, 123, 0.3);
-  transform: translateY(-6px);
 }
 
 .profile_img {
@@ -487,11 +504,14 @@
   padding: 0 10px;
 }
 
+/* 로마자 이름 줄이 없는 카드도 높이가 같도록 최소 높이 확보 */
 .profile_name_group {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 3px;
   min-width: 0;
+  min-height: 37px;
 }
 
 .profile_name {
@@ -503,18 +523,21 @@
 .profile_name strong {
   font-size: 19px;
   font-weight: 600;
+  line-height: 1.2;
   color: #000;
 }
 
 .profile_name span {
   font-size: 11px;
   font-weight: 300;
+  line-height: 1.2;
   color: var(--c_gray);
 }
 
 .profile_roman {
   font-size: 10px;
   font-weight: 300;
+  line-height: 1.15;
   color: var(--c_gray);
   text-transform: uppercase;
 }
@@ -554,7 +577,6 @@
 .player_bottom .pic_col {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   gap: 36px;
   flex: none;
   width: 328px;
@@ -568,6 +590,9 @@
 .player_bottom .pic_sub2 {
   width: 328px;
   height: 214px;
+}
+.player_bottom .pic_sub2 img {
+  object-position: top center;
 }
 
 /* --------------------------------------------------------------------------
@@ -633,6 +658,7 @@
 
 .gallery_photos {
   display: flex;
+  align-items: flex-start; /* stretch 되면 열 높이가 달라져 순환 길이가 틀어진다 */
   gap: 49px;
   position: absolute;
   top: -100%;
@@ -640,6 +666,10 @@
   width: 753px;
   transform: rotate(32deg);
   transform-origin: 0 0;
+}
+
+/* 사진은 장식이므로 클릭은 통과시키되, 흐름 정지용 hover 는 래퍼에서 받는다 */
+.gallery_photos img {
   pointer-events: none;
 }
 
@@ -649,6 +679,11 @@
   gap: 50px;
   flex: none;
   width: 300px;
+}
+
+/* 무한 흐름 (js/main.js 에서 제어) */
+.gallery_photos.is_flowing .photo_col {
+  will-change: transform;
 }
 
 .gallery_photos .photo_col + .photo_col {
@@ -772,6 +807,13 @@
   overflow: hidden;
   background: url('../img/guide/back.jfif') center / cover no-repeat;
 }
+.jamsil_guide:before {
+  content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+}
+
 
 .jamsil_guide .blob_1 {
   top: -7%;
@@ -798,20 +840,40 @@
   display: flex;
   flex-direction: column;
   gap: 56px;
-  position: absolute;
-  top: 320px;
-  left: 110px;
-  z-index: 2;
   width: 738px;
   max-width: calc(100% - 120px);
+  padding-bottom: 80px;
 }
-
+@keyframes moveToBottom {
+  0%{
+    top: 20%;
+  }
+  10%{
+    top: 20%;
+  }
+  20%{
+    left: 20%;
+  }
+  40%{
+    left: 40%;
+  }
+  60%{
+    left: 60%;
+  }
+  80%{
+    left: 80%;
+  }
+  100% {
+    top: calc(100% - 120px);
+  }
+}
 .guide_mascot {
   position: absolute;
   top: 175px;
   left: 498px;
   width: 240px;
   pointer-events: none;
+  animation: moveToBottom 12s ease-in-out forwards;
 }
 
 .guide_mascot img {
@@ -882,7 +944,7 @@
   height: 370px;
   overflow: hidden;
   border-radius: var(--r_xs);
-  background: var(--c_white);
+  background: var(--white);
 }
 
 .guide_img img {
@@ -913,6 +975,7 @@
 .guide_slide_area {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 24px;
   flex: none;
   width: 540px;
@@ -932,12 +995,15 @@
 .guide_shop_list {
   gap: 22px;
 }
+.guide_shop_list li {
+  width:100%;
+}
 
 .guide_shop_item {
   display: flex;
   align-items: center;
   gap: 22px;
-  width: 560px;
+  width: 100%;
 }
 
 .guide_shop_item .pic {
@@ -1165,7 +1231,6 @@
 .shop_tap a {
   display: flex;
   align-items: center;
-  justify-content: center;
   padding: 14px 10px;
   border-bottom: 1px solid var(--c_navy);
   font-family: var(--ff_title);
@@ -1174,6 +1239,7 @@
   line-height: 1.33;
   text-transform: uppercase;
   transition: color 0.25s ease;
+  width:100%;
 }
 
 .shop_tap a:first-child {

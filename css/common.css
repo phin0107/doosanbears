@@ -384,6 +384,7 @@ button[disabled],
    -------------------------------------------------------------------------- */
 .scroller {
   position: relative;
+  min-width: 0;
 }
 
 .scroller_track {
