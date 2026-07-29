@@ -157,7 +157,7 @@ body {
 
 .tit_display {
   font-family: var(--ff_title);
-  font-size: var(--fs_display);
+  font-size: 8em;
   font-weight: 900;
   line-height: 1;
   text-transform: uppercase;
@@ -172,7 +172,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 12px 24px;
+  padding: 8px 18px;
   border-radius: var(--r_sm);
   background: var(--c_navy_2);
   color: var(--c_white);
@@ -319,6 +319,7 @@ button[disabled],
   border-radius: var(--r_chip);
   background: transparent;
   color: var(--c_white);
+  border:1px solid var(--c_white);
   font-size: var(--fs_body_sm);
   font-weight: 300;
   line-height: 1;
@@ -586,13 +587,22 @@ button[disabled],
 }
 
 .nav_wrap {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 32px;
 }
 
 /* GNB (알약형) */
+.header.is_fixed .gnb, .header.is_fixed .header_util{
+  background:none;
+  backdrop-filter:none;
+}
 .gnb {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 10;
   height: var(--gnb_height);
   padding: 14px 20px 18px;
   overflow: hidden;
@@ -935,3 +945,7 @@ button[disabled],
 .footer_sns a:focus-visible {
   background: var(--c_gray);
 }
+
+
+/* 임시 삭제 */
+.scroll_bar{display:none}
