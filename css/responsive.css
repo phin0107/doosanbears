@@ -1095,7 +1095,7 @@
   }
 
   .match_team {
-    gap: 32px;
+    gap:8vw;
   }
 
   .match_score .home,
