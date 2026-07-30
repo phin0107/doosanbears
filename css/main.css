@@ -194,6 +194,63 @@
   user-select: none;
 }
 
+/* Pager 전용 목록: 자유 드래그·관성 스크롤 없이 버튼/도트로만 이동 */
+[data-pager-only] .scroller_track {
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+  cursor: default;
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+}
+
+.match_pager_btn {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(24, 25, 40, 0.88);
+  transform: translateY(-50%);
+  transition: opacity 0.25s ease, background-color 0.25s ease;
+}
+
+.match_pager_btn.type_prev {
+  left: 16px;
+}
+
+.match_pager_btn.type_next {
+  right: 16px;
+}
+
+.match_pager_btn img {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+}
+
+.match_pager_btn.type_next img {
+  transform: rotate(180deg);
+}
+
+.match_pager_btn:hover {
+  background: var(--c_navy);
+}
+
+.match_pager_btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.match_pager_btn:focus-visible {
+  outline: 2px solid var(--c_red);
+  outline-offset: 3px;
+}
+
 .match_nav {
   min-height: 24px;
 }
@@ -638,6 +695,10 @@
   display: none;
 }
 
+.player_mobile {
+  display: none;
+}
+
 @media (min-width: 1280px) {
   .player_legacy {
     display: none;
@@ -651,7 +712,7 @@
 
   .player_desktop_inner {
     width: 100%;
-    max-width: var(--inner);
+    max-width: var(--inner_wide);
     margin: 0 auto;
   }
 
@@ -957,6 +1018,15 @@
   gap: 24px;
 }
 
+.bears_tv_inner > .match_nav {
+  margin-top: 24px;
+}
+.bears_tv_inner >.match_nav .scroll_dots > button{
+  background-color: var(--c_gray);
+}
+.bears_tv_inner >.match_nav .scroll_dots > button.is_current{
+  background-color: var(--c_red);
+}
 .video_list {
   gap: 19px;
 }
@@ -1216,6 +1286,10 @@
   gap: 24px;
   flex: none;
   width: 540px;
+}
+
+.guide_slide_area > .match_nav {
+  min-height: 24px;
 }
 
 .guide_slide_list {

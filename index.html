@@ -6,6 +6,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>두산베어스 | DOOSAN BEARS</title>
   <meta name="description" content="두산베어스 공식 홈페이지. 경기 일정과 순위, 선수단, BEARS TV, 잠실구장 안내, 굿즈샵과 이벤트 소식을 확인하세요.">
+  <!-- 파비콘 세트 (/favicon 폴더에 업로드) -->
+  <link rel="icon" href="/favicon/favicon.ico" sizes="48x48" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32.png" />
+  <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/favicon/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/favicon/icon-512.png" />
+  <link rel="manifest" href="/favicon/site.webmanifest" />
+
+  <!-- 오픈그래프 (카카오톡/페이스북 등 공유 미리보기) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="복붙랩" />
+  <meta property="og:title" content="복붙랩" />
+  <meta property="og:description" content="웹퍼블리셔와 디자이너를 위한 무료 복붙 작업대. 파비콘, 웹폰트, 아이콘, CSS 코드를 브라우저에서 바로 만들고 복사합니다." />
+  <meta property="og:url" content="https://www.bokbootlab.com/" />
+  <meta property="og:image" content="https://www.bokbootlab.com/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <link rel="icon" href="img/logo.png">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/common.css">
@@ -38,7 +56,7 @@
               <a class="gnb_search" href="#" aria-label="검색"><img src="img/Icon/search.svg" alt=""></a>
               <button type="button" class="gnb_close" id="gnb_close" aria-label="메뉴 닫기">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 </svg>
               </button>
             </div>
@@ -173,96 +191,107 @@
           </a>
         </div>
 
-      <div class="scroller" data-scroller="match" data-pager="true" data-pager-count="4" data-page-by-card="true" data-drag="true" data-click-slide="true" data-autoplay="800">
-        <ul class="scroller_track type_bleed match_list" data-role="track">
-          <li>
-            <p class="badge_grad">NEXT MATCH</p>
-            <a class="match_card" href="#">
-              <div class="match_desc">
-                <p class="match_date">
-                  <span class="date">2026.07.21</span>
-                  <span class="place">수원 18 : 30</span>
-                </p>
-                <div class="match_team">
-                  <span class="team">
-                    <img src="img/img_emblem_2025_1.webp" alt="">두산
-                  </span>
-                  <span class="match_score">
-                    <b class="home">0</b><span class="sep">:</span><b class="away">0</b>
-                  </span>
-                  <span class="team">
-                    <img src="img/Icon/team_logo/logo_kt.svg" alt="">KT
-                  </span>
+        <div class="scroller" data-scroller="match" data-pager="true" data-pager-count="4" data-page-by-card="true"
+          data-drag="true" data-click-slide="true" data-autoplay="800">
+          <button type="button" class="match_pager_btn type_prev" data-role="prev" aria-label="이전 경기">
+            <img src="img/Icon/chevron-left.svg" alt="">
+          </button>
+          <ul class="scroller_track type_bleed match_list" data-role="track">
+            <li>
+              <p class="badge_grad">NEXT MATCH</p>
+              <a class="match_card" href="#">
+                <div class="match_desc">
+                  <p class="match_date">
+                    <span class="date">2026.07.21</span>
+                    <span class="place">수원 18 : 30</span>
+                  </p>
+                  <div class="match_team">
+                    <span class="team">
+                      <img src="img/img_emblem_2025_1.webp" alt="">두산
+                    </span>
+                    <span class="match_score">
+                      <b class="home">0</b><span class="sep">:</span><b class="away">0</b>
+                    </span>
+                    <span class="team">
+                      <img src="img/Icon/team_logo/logo_kt.svg" alt="">KT
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a class="match_card" href="#">
-              <div class="match_desc">
-                <p class="match_date">
-                  <span class="date">2026.07.22</span>
-                  <span class="place">수원 18 : 30</span>
-                </p>
-                <div class="match_team">
-                  <span class="team"><img src="img/img_emblem_2025_1.webp" alt="">두산</span>
-                  <span class="match_score"><b class="home">0</b><span class="sep">:</span><b class="away">0</b></span>
-                  <span class="team"><img src="img/Icon/team_logo/logo_kt.svg" alt="">KT</span>
+              </a>
+            </li>
+            <li>
+              <a class="match_card" href="#">
+                <div class="match_desc">
+                  <p class="match_date">
+                    <span class="date">2026.07.22</span>
+                    <span class="place">수원 18 : 30</span>
+                  </p>
+                  <div class="match_team">
+                    <span class="team"><img src="img/img_emblem_2025_1.webp" alt="">두산</span>
+                    <span class="match_score"><b class="home">0</b><span class="sep">:</span><b
+                        class="away">0</b></span>
+                    <span class="team"><img src="img/Icon/team_logo/logo_kt.svg" alt="">KT</span>
+                  </div>
                 </div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a class="match_card" href="#">
-              <div class="match_desc">
-                <p class="match_date">
-                  <span class="date">2026.07.23</span>
-                  <span class="place">수원 18 : 30</span>
-                </p>
-                <div class="match_team">
-                  <span class="team"><img src="img/img_emblem_2025_1.webp" alt="">두산</span>
-                  <span class="match_score"><b class="home">0</b><span class="sep">:</span><b class="away">0</b></span>
-                  <span class="team"><img src="img/Icon/team_logo/logo_kt.svg" alt="">KT</span>
+              </a>
+            </li>
+            <li>
+              <a class="match_card" href="#">
+                <div class="match_desc">
+                  <p class="match_date">
+                    <span class="date">2026.07.23</span>
+                    <span class="place">수원 18 : 30</span>
+                  </p>
+                  <div class="match_team">
+                    <span class="team"><img src="img/img_emblem_2025_1.webp" alt="">두산</span>
+                    <span class="match_score"><b class="home">0</b><span class="sep">:</span><b
+                        class="away">0</b></span>
+                    <span class="team"><img src="img/Icon/team_logo/logo_kt.svg" alt="">KT</span>
+                  </div>
                 </div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a class="match_card" href="#">
-              <div class="match_desc">
-                <p class="match_date">
-                  <span class="date">2026.07.24</span>
-                  <span class="place">잠실 18 : 30</span>
-                </p>
-                <div class="match_team">
-                  <span class="team"><img src="img/img_emblem_2025_1.webp" alt="">두산</span>
-                  <span class="match_score"><b class="home">0</b><span class="sep">:</span><b class="away">0</b></span>
-                  <span class="team"><img src="img/Icon/team_logo/logo_kt.svg" alt="">KT</span>
+              </a>
+            </li>
+            <li>
+              <a class="match_card" href="#">
+                <div class="match_desc">
+                  <p class="match_date">
+                    <span class="date">2026.07.24</span>
+                    <span class="place">잠실 18 : 30</span>
+                  </p>
+                  <div class="match_team">
+                    <span class="team"><img src="img/img_emblem_2025_1.webp" alt="">두산</span>
+                    <span class="match_score"><b class="home">0</b><span class="sep">:</span><b
+                        class="away">0</b></span>
+                    <span class="team"><img src="img/Icon/team_logo/logo_kt.svg" alt="">KT</span>
+                  </div>
                 </div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a class="match_card" href="#">
-              <div class="match_desc">
-                <p class="match_date">
-                  <span class="date">2026.07.21</span>
-                  <span class="place">수원 18 : 30</span>
-                </p>
-                <div class="match_team">
-                  <span class="team"><img src="img/img_emblem_2025_1.webp" alt="">두산</span>
-                  <span class="match_score"><b class="home">0</b><span class="sep">:</span><b class="away">0</b></span>
-                  <span class="team"><img src="img/Icon/team_logo/logo_kt.svg" alt="">KT</span>
+              </a>
+            </li>
+            <li>
+              <a class="match_card" href="#">
+                <div class="match_desc">
+                  <p class="match_date">
+                    <span class="date">2026.07.21</span>
+                    <span class="place">수원 18 : 30</span>
+                  </p>
+                  <div class="match_team">
+                    <span class="team"><img src="img/img_emblem_2025_1.webp" alt="">두산</span>
+                    <span class="match_score"><b class="home">0</b><span class="sep">:</span><b
+                        class="away">0</b></span>
+                    <span class="team"><img src="img/Icon/team_logo/logo_kt.svg" alt="">KT</span>
+                  </div>
                 </div>
-              </div>
-            </a>
-          </li>
-        </ul>
-      </div>
+              </a>
+            </li>
+          </ul>
+          <button type="button" class="match_pager_btn type_next" data-role="next" aria-label="다음 경기">
+            <img src="img/Icon/chevron-left.svg" alt="">
+          </button>
+        </div>
 
-      <div class="scroll_nav match_nav" data-scroller-nav="match">
-        <span class="scroll_dots type_dark" data-role="dots" aria-label="경기 일정 페이지"></span>
-      </div>
+        <div class="scroll_nav match_nav" data-scroller-nav="match">
+          <span class="scroll_dots type_dark" data-role="dots" aria-label="경기 일정 페이지"></span>
+        </div>
     </section>
 
     <!-- ============================= 03. INFO ============================= -->
@@ -290,46 +319,129 @@
         <div class="desktop_player_list">
           <article class="desktop_player_row" id="desktop_player_1">
             <div class="desktop_player_side">
-              <a class="profile_card" href="#"><span class="profile_img"><img src="img/player/pitcher/01_park.webp" alt="박치국 선수"><span class="profile_icons"><span><img src="img/Icon/heart.svg" alt=""></span><span><img src="img/Icon/headphones.svg" alt=""></span></span></span><span class="profile_tit"><span class="profile_name_group"><span class="profile_name"><strong>박치국</strong><span>투수</span></span><span class="profile_roman">PARK CHIGUK</span></span><span class="profile_no">1</span></span></a>
-              <nav class="desktop_player_pager" aria-label="투수 목록"><a class="pager_arrow" href="#desktop_player_17" aria-label="이전 선수">‹</a><span>1</span><span>/</span><span>6</span><a class="pager_arrow" href="#desktop_player_4" aria-label="다음 선수">›</a></nav>
+              <a class="profile_card" href="#"><span class="profile_img"><img src="img/player/pitcher/01_park.webp"
+                    alt="박치국 선수"><span class="profile_icons"><span><img src="img/Icon/heart.svg"
+                        alt=""></span><span><img src="img/Icon/headphones.svg" alt=""></span></span></span><span
+                  class="profile_tit"><span class="profile_name_group"><span
+                      class="profile_name"><strong>박치국</strong><span>투수</span></span><span class="profile_roman">PARK
+                      CHIGUK</span></span><span class="profile_no">1</span></span></a>
+              <nav class="desktop_player_pager" aria-label="투수 목록"><a class="pager_arrow" href="#desktop_player_17"
+                  aria-label="이전 선수">‹</a><span>1</span><span>/</span><span>6</span><a class="pager_arrow"
+                  href="#desktop_player_4" aria-label="다음 선수">›</a></nav>
             </div>
-            <div class="desktop_player_photos"><img src="img/player/pitcher/01_park_more1.webp" alt="경기 중인 박치국 선수"><img src="img/player/pitcher/01_park_more2.webp" alt="마운드로 향하는 박치국 선수"><img src="img/player/pitcher/01_park_more3.webp" alt="투구를 준비하는 박치국 선수"></div>
+            <div class="desktop_player_photos"><img src="img/player/pitcher/01_park_more1.webp" alt="경기 중인 박치국 선수"><img
+                src="img/player/pitcher/01_park_more2.webp" alt="마운드로 향하는 박치국 선수"><img
+                src="img/player/pitcher/01_park_more3.webp" alt="투구를 준비하는 박치국 선수"></div>
           </article>
           <article class="desktop_player_row" id="desktop_player_4">
             <div class="desktop_player_side">
-              <a class="profile_card" href="#"><span class="profile_img"><img src="img/player/pitcher/04_kim.webp" alt="김동주 선수"><span class="profile_icons"><span><img src="img/Icon/heart.svg" alt=""></span><span><img src="img/Icon/headphones.svg" alt=""></span></span></span><span class="profile_tit"><span class="profile_name_group"><span class="profile_name"><strong>김동주</strong><span>투수</span></span><span class="profile_roman">KIM DONGJU</span></span><span class="profile_no">4</span></span></a>
-              <nav class="desktop_player_pager" aria-label="투수 목록"><a class="pager_arrow" href="#desktop_player_1" aria-label="이전 선수">‹</a><span>2</span><span>/</span><span>6</span><a class="pager_arrow" href="#desktop_player_12" aria-label="다음 선수">›</a></nav>
+              <a class="profile_card" href="#"><span class="profile_img"><img src="img/player/pitcher/04_kim.webp"
+                    alt="김동주 선수"><span class="profile_icons"><span><img src="img/Icon/heart.svg"
+                        alt=""></span><span><img src="img/Icon/headphones.svg" alt=""></span></span></span><span
+                  class="profile_tit"><span class="profile_name_group"><span
+                      class="profile_name"><strong>김동주</strong><span>투수</span></span><span class="profile_roman">KIM
+                      DONGJU</span></span><span class="profile_no">4</span></span></a>
+              <nav class="desktop_player_pager" aria-label="투수 목록"><a class="pager_arrow" href="#desktop_player_1"
+                  aria-label="이전 선수">‹</a><span>2</span><span>/</span><span>6</span><a class="pager_arrow"
+                  href="#desktop_player_12" aria-label="다음 선수">›</a></nav>
             </div>
-            <div class="desktop_player_photos"><img src="img/player/pitcher/04_kim_more1.webp" alt="경기 중인 김동주 선수"><img src="img/player/pitcher/04_kim_more2.webp" alt="김동주 선수"><img src="img/player/pitcher/04_kim_more3.webp" alt="김동주 선수"></div>
+            <div class="desktop_player_photos"><img src="img/player/pitcher/04_kim_more1.webp" alt="경기 중인 김동주 선수"><img
+                src="img/player/pitcher/04_kim_more2.webp" alt="김동주 선수"><img src="img/player/pitcher/04_kim_more3.webp"
+                alt="김동주 선수"></div>
           </article>
           <article class="desktop_player_row" id="desktop_player_12">
             <div class="desktop_player_side">
-              <a class="profile_card" href="#"><span class="profile_img"><img src="img/player/pitcher/12_takada.webp" alt="타카다 타쿠토 선수"><span class="profile_icons"><span><img src="img/Icon/heart.svg" alt=""></span><span><img src="img/Icon/headphones.svg" alt=""></span></span></span><span class="profile_tit"><span class="profile_name_group"><span class="profile_name"><strong>타카다 타쿠토</strong><span>투수</span></span><span class="profile_roman">TAKADA TAKUTO</span></span><span class="profile_no">12</span></span></a>
-              <nav class="desktop_player_pager" aria-label="투수 목록"><a class="pager_arrow" href="#desktop_player_4" aria-label="이전 선수">‹</a><span>3</span><span>/</span><span>6</span><a class="pager_arrow" href="#desktop_player_15" aria-label="다음 선수">›</a></nav>
+              <a class="profile_card" href="#"><span class="profile_img"><img src="img/player/pitcher/12_takada.webp"
+                    alt="타카다 타쿠토 선수"><span class="profile_icons"><span><img src="img/Icon/heart.svg"
+                        alt=""></span><span><img src="img/Icon/headphones.svg" alt=""></span></span></span><span
+                  class="profile_tit"><span class="profile_name_group"><span class="profile_name"><strong>타카다
+                        타쿠토</strong><span>투수</span></span><span class="profile_roman">TAKADA TAKUTO</span></span><span
+                    class="profile_no">12</span></span></a>
+              <nav class="desktop_player_pager" aria-label="투수 목록"><a class="pager_arrow" href="#desktop_player_4"
+                  aria-label="이전 선수">‹</a><span>3</span><span>/</span><span>6</span><a class="pager_arrow"
+                  href="#desktop_player_15" aria-label="다음 선수">›</a></nav>
             </div>
-            <div class="desktop_player_photos"><img src="img/player/pitcher/12_takada_more1.webp" alt="경기 중인 타카다 타쿠토 선수"><img src="img/player/pitcher/12_takada_more2.webp" alt="타카다 타쿠토 선수"><img src="img/player/pitcher/12_takada_more3.webp" alt="타카다 타쿠토 선수"></div>
+            <div class="desktop_player_photos"><img src="img/player/pitcher/12_takada_more1.webp"
+                alt="경기 중인 타카다 타쿠토 선수"><img src="img/player/pitcher/12_takada_more2.webp" alt="타카다 타쿠토 선수"><img
+                src="img/player/pitcher/12_takada_more3.webp" alt="타카다 타쿠토 선수"></div>
           </article>
           <article class="desktop_player_row" id="desktop_player_15">
             <div class="desktop_player_side">
-              <a class="profile_card" href="#"><span class="profile_img"><img src="img/player/pitcher/15_choi.webp" alt="최주형 선수"><span class="profile_icons"><span><img src="img/Icon/heart.svg" alt=""></span><span><img src="img/Icon/headphones.svg" alt=""></span></span></span><span class="profile_tit"><span class="profile_name_group"><span class="profile_name"><strong>최주형</strong><span>투수</span></span><span class="profile_roman">CHOI JUHYEONG</span></span><span class="profile_no">15</span></span></a>
-              <nav class="desktop_player_pager" aria-label="투수 목록"><a class="pager_arrow" href="#desktop_player_12" aria-label="이전 선수">‹</a><span>4</span><span>/</span><span>6</span><a class="pager_arrow" href="#desktop_player_16" aria-label="다음 선수">›</a></nav>
+              <a class="profile_card" href="#"><span class="profile_img"><img src="img/player/pitcher/15_choi.webp"
+                    alt="최주형 선수"><span class="profile_icons"><span><img src="img/Icon/heart.svg"
+                        alt=""></span><span><img src="img/Icon/headphones.svg" alt=""></span></span></span><span
+                  class="profile_tit"><span class="profile_name_group"><span
+                      class="profile_name"><strong>최주형</strong><span>투수</span></span><span class="profile_roman">CHOI
+                      JUHYEONG</span></span><span class="profile_no">15</span></span></a>
+              <nav class="desktop_player_pager" aria-label="투수 목록"><a class="pager_arrow" href="#desktop_player_12"
+                  aria-label="이전 선수">‹</a><span>4</span><span>/</span><span>6</span><a class="pager_arrow"
+                  href="#desktop_player_16" aria-label="다음 선수">›</a></nav>
             </div>
-            <div class="desktop_player_photos"><span class="desktop_player_placeholder">이미지 준비중</span><span class="desktop_player_placeholder">이미지 준비중</span><span class="desktop_player_placeholder">이미지 준비중</span></div>
+            <div class="desktop_player_photos"><span class="desktop_player_placeholder">이미지 준비중</span><span
+                class="desktop_player_placeholder">이미지 준비중</span><span class="desktop_player_placeholder">이미지 준비중</span>
+            </div>
           </article>
           <article class="desktop_player_row" id="desktop_player_16">
             <div class="desktop_player_side">
-              <a class="profile_card" href="#"><span class="profile_img"><img src="img/player/pitcher/16_kim.webp" alt="김정우 선수"><span class="profile_icons"><span><img src="img/Icon/heart.svg" alt=""></span><span><img src="img/Icon/headphones.svg" alt=""></span></span></span><span class="profile_tit"><span class="profile_name_group"><span class="profile_name"><strong>김정우</strong><span>투수</span></span><span class="profile_roman">KIM JEONG WOO</span></span><span class="profile_no">16</span></span></a>
-              <nav class="desktop_player_pager" aria-label="투수 목록"><a class="pager_arrow" href="#desktop_player_15" aria-label="이전 선수">‹</a><span>5</span><span>/</span><span>6</span><a class="pager_arrow" href="#desktop_player_17" aria-label="다음 선수">›</a></nav>
+              <a class="profile_card" href="#"><span class="profile_img"><img src="img/player/pitcher/16_kim.webp"
+                    alt="김정우 선수"><span class="profile_icons"><span><img src="img/Icon/heart.svg"
+                        alt=""></span><span><img src="img/Icon/headphones.svg" alt=""></span></span></span><span
+                  class="profile_tit"><span class="profile_name_group"><span
+                      class="profile_name"><strong>김정우</strong><span>투수</span></span><span class="profile_roman">KIM
+                      JEONG WOO</span></span><span class="profile_no">16</span></span></a>
+              <nav class="desktop_player_pager" aria-label="투수 목록"><a class="pager_arrow" href="#desktop_player_15"
+                  aria-label="이전 선수">‹</a><span>5</span><span>/</span><span>6</span><a class="pager_arrow"
+                  href="#desktop_player_17" aria-label="다음 선수">›</a></nav>
             </div>
-            <div class="desktop_player_photos"><img src="img/player/pitcher/16_kim_more1.webp" alt="경기 중인 김정우 선수"><img src="img/player/pitcher/16_kim_more2.webp" alt="김정우 선수"><img src="img/player/pitcher/16_kim_more3.webp" alt="김정우 선수"></div>
+            <div class="desktop_player_photos"><img src="img/player/pitcher/16_kim_more1.webp" alt="경기 중인 김정우 선수"><img
+                src="img/player/pitcher/16_kim_more2.webp" alt="김정우 선수"><img src="img/player/pitcher/16_kim_more3.webp"
+                alt="김정우 선수"></div>
           </article>
           <article class="desktop_player_row" id="desktop_player_17">
             <div class="desktop_player_side">
-              <a class="profile_card" href="#"><span class="profile_img"><img src="img/player/pitcher/17_park.webp" alt="박정수 선수"><span class="profile_icons"><span><img src="img/Icon/heart.svg" alt=""></span><span><img src="img/Icon/headphones.svg" alt=""></span></span></span><span class="profile_tit"><span class="profile_name_group"><span class="profile_name"><strong>박정수</strong><span>투수</span></span><span class="profile_roman">PARK JUNG SOO</span></span><span class="profile_no">17</span></span></a>
-              <nav class="desktop_player_pager" aria-label="투수 목록"><a class="pager_arrow" href="#desktop_player_16" aria-label="이전 선수">‹</a><span>6</span><span>/</span><span>6</span><a class="pager_arrow" href="#desktop_player_1" aria-label="다음 선수">›</a></nav>
+              <a class="profile_card" href="#"><span class="profile_img"><img src="img/player/pitcher/17_park.webp"
+                    alt="박정수 선수"><span class="profile_icons"><span><img src="img/Icon/heart.svg"
+                        alt=""></span><span><img src="img/Icon/headphones.svg" alt=""></span></span></span><span
+                  class="profile_tit"><span class="profile_name_group"><span
+                      class="profile_name"><strong>박정수</strong><span>투수</span></span><span class="profile_roman">PARK
+                      JUNG SOO</span></span><span class="profile_no">17</span></span></a>
+              <nav class="desktop_player_pager" aria-label="투수 목록"><a class="pager_arrow" href="#desktop_player_16"
+                  aria-label="이전 선수">‹</a><span>6</span><span>/</span><span>6</span><a class="pager_arrow"
+                  href="#desktop_player_1" aria-label="다음 선수">›</a></nav>
             </div>
-            <div class="desktop_player_photos"><img src="img/player/pitcher/17_park_more1.webp" alt="경기 중인 박정수 선수"><img src="img/player/pitcher/17_park_more2.webp" alt="박정수 선수"><img src="img/player/pitcher/17_park_more3.webp" alt="박정수 선수"></div>
+            <div class="desktop_player_photos"><img src="img/player/pitcher/17_park_more1.webp" alt="경기 중인 박정수 선수"><img
+                src="img/player/pitcher/17_park_more2.webp" alt="박정수 선수"><img
+                src="img/player/pitcher/17_park_more3.webp" alt="박정수 선수"></div>
           </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="player player_mobile" id="player_mobile" aria-label="선수 소개">
+      <div class="player_mobile_inner">
+        <div class="player_mobile_head">
+          <div class="player_mobile_title">
+            <h2 class="tit_section">player</h2>
+            <a class="btn_more" href="#">전체 보기 <img class="ico" src="img/Icon/arrow-right.svg" alt=""></a>
+          </div>
+          <div class="player_mobile_tabs" role="tablist" aria-label="선수 구분">
+            <button type="button" class="is_active" role="tab" id="mobile_tab_pitcher"
+              aria-controls="mobile_player_panel" aria-selected="true" tabindex="0"
+              data-mobile-player-tab="pitcher">투수</button>
+            <button type="button" role="tab" id="mobile_tab_hitter" aria-controls="mobile_player_panel"
+              aria-selected="false" tabindex="-1" data-mobile-player-tab="hitter">타자</button>
+          </div>
+        </div>
+        <div class="player_mobile_stage">
+          <div id="mobile_player_panel" role="tabpanel" aria-labelledby="mobile_tab_pitcher" data-mobile-player-slides>
+          </div>
+          <nav class="player_mobile_pager" aria-label="선수 목록">
+            <button type="button" data-mobile-player-prev aria-label="이전 선수"><img src="img/Icon/chevron-left.svg"
+                alt=""></button>
+            <strong data-mobile-player-current>1</strong><span>/</span><span data-mobile-player-total>6</span>
+            <button type="button" data-mobile-player-next aria-label="다음 선수"><img src="img/Icon/chevron-left.svg"
+                alt=""></button>
+          </nav>
         </div>
       </div>
     </section>
@@ -862,7 +974,11 @@
           </a>
         </div>
 
-        <div class="scroller video_body reveal" data-scroller="video">
+        <div class="scroller video_body reveal" data-scroller="video" data-pager="true" data-page-by-card="true"
+          data-pager-only data-autoplay="3000">
+          <button type="button" class="match_pager_btn type_prev" data-role="prev" aria-label="이전 영상">
+            <img src="img/Icon/chevron-left.svg" alt="">
+          </button>
           <ul class="scroller_track type_bleed video_list" data-role="track">
             <li>
               <a class="video_card" href="#">
@@ -934,6 +1050,12 @@
           <div class="scroll_bar" data-role="bar">
             <span class="scroll_bar_thumb" data-role="thumb"></span>
           </div>
+          <button type="button" class="match_pager_btn type_next" data-role="next" aria-label="다음 영상">
+            <img src="img/Icon/chevron-left.svg" alt="">
+          </button>
+        </div>
+        <div class="scroll_nav match_nav" data-scroller-nav="video">
+          <span class="scroll_dots type_dark" data-role="dots" aria-label="BEARS TV 페이지"></span>
         </div>
       </div>
     </section>
@@ -1042,18 +1164,21 @@
               </a>
             </div>
 
-            <div class="scroller guide_slide_area" data-scroller="food">
+            <div class="scroller guide_slide_area" data-scroller="food" data-pager="true" data-page-by-card="true"
+              data-pager-only data-autoplay="3000">
+              <button type="button" class="match_pager_btn type_prev" data-role="prev" aria-label="이전 음식점">
+                <img src="img/Icon/chevron-left.svg" alt="">
+              </button>
               <ul class="scroller_track guide_slide_list" data-role="track">
                 <li><img src="img/guide/food_list/bhc.png" alt="BHC 치킨 - 1층 36번"></li>
                 <li><img src="img/guide/food_list/cafe_groud.png" alt="카페그라운 - 2층"></li>
                 <li><img src="img/guide/food_list/pizzahut.png" alt="피자헛"></li>
               </ul>
-              <div class="scroll_nav">
-                <button type="button" class="arrow_btn type_prev" data-role="prev"><span class="blind">이전
-                    음식점</span></button>
-                <span class="scroll_dots" data-role="dots" aria-hidden="true"></span>
-                <button type="button" class="arrow_btn type_next" data-role="next"><span class="blind">다음
-                    음식점</span></button>
+              <button type="button" class="match_pager_btn type_next" data-role="next" aria-label="다음 음식점">
+                <img src="img/Icon/chevron-left.svg" alt="">
+              </button>
+              <div class="scroll_nav match_nav">
+                <span class="scroll_dots type_dark" data-role="dots" aria-label="음식점 페이지"></span>
               </div>
             </div>
           </div>
@@ -1073,7 +1198,11 @@
               </a>
             </div>
 
-            <div class="scroller guide_slide_area" data-scroller="offline">
+            <div class="scroller guide_slide_area" data-scroller="offline" data-pager="true" data-page-by-card="true"
+              data-pager-only data-autoplay="3000">
+              <button type="button" class="match_pager_btn type_prev" data-role="prev" aria-label="이전 매장">
+                <img src="img/Icon/chevron-left.svg" alt="">
+              </button>
               <ul class="scroller_track guide_shop_list" data-role="track">
                 <li>
                   <div class="guide_shop_item">
@@ -1104,12 +1233,11 @@
                   </div>
                 </li>
               </ul>
-              <div class="scroll_nav">
-                <button type="button" class="arrow_btn type_prev" data-role="prev"><span class="blind">이전
-                    매장</span></button>
-                <span class="scroll_dots" data-role="dots" aria-hidden="true"></span>
-                <button type="button" class="arrow_btn type_next" data-role="next"><span class="blind">다음
-                    매장</span></button>
+              <button type="button" class="match_pager_btn type_next" data-role="next" aria-label="다음 매장">
+                <img src="img/Icon/chevron-left.svg" alt="">
+              </button>
+              <div class="scroll_nav match_nav">
+                <span class="scroll_dots type_dark" data-role="dots" aria-label="오프라인 매장 페이지"></span>
               </div>
             </div>
           </div>
@@ -1171,7 +1299,7 @@
             </div>
           </div>
 
-          <div class="shop_con scroller" data-scroller="shop">
+          <div class="shop_con scroller" data-scroller="shop" data-page-by-card data-pager-only data-autoplay="3000">
             <ul class="scroller_track type_bleed shop_list" data-role="track">
               <li>
                 <a class="product_card" href="#">
@@ -1404,7 +1532,7 @@
   </footer>
 
 
-  
+
   <script src="js/common.js"></script>
   <script src="js/main.js"></script>
 

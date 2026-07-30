@@ -53,20 +53,30 @@
     function lockPageScroll() {
       if (isScrollLocked) return;
       lockedScrollY = window.scrollY;
+      document.documentElement.classList.add('is_menu_locked');
       document.body.classList.add('is_menu_locked');
       document.body.style.position = 'fixed';
       document.body.style.top = '-' + lockedScrollY + 'px';
+      document.body.style.left = '0';
       document.body.style.width = '100%';
       isScrollLocked = true;
     }
 
     function unlockPageScroll() {
       if (!isScrollLocked) return;
+      document.documentElement.classList.remove('is_menu_locked');
       document.body.classList.remove('is_menu_locked');
       document.body.style.position = '';
       document.body.style.top = '';
+      document.body.style.left = '';
       document.body.style.width = '';
+
+      /* html의 smooth scroll 때문에 복귀 위치가 애니메이션되지 않도록 일시 해제 */
+      var prevBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
       window.scrollTo(0, lockedScrollY);
+      document.documentElement.style.scrollBehavior = prevBehavior;
+
       isScrollLocked = false;
     }
 
@@ -75,7 +85,8 @@
       toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       if (label) label.textContent = isOpen ? '전체 메뉴 닫기' : '전체 메뉴 열기';
 
-      if (isOpen && isMobileMenu()) lockPageScroll();
+      /* 전체 메뉴가 열려 있는 동안 페이지 스크롤 차단 */
+      if (isOpen) lockPageScroll();
       else unlockPageScroll();
     }
 
@@ -131,7 +142,7 @@
     /* 데스크톱 폭으로 넓어지면 상태 초기화 */
     window.addEventListener('resize', function () {
       if (window.innerWidth >= DESKTOP_MIN) setOpen(false);
-      else if (!isMobileMenu()) unlockPageScroll();
+      else if (!gnb.classList.contains('is_open')) unlockPageScroll();
     });
   }
 

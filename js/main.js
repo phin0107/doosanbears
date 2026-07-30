@@ -5,6 +5,9 @@
 (function () {
   'use strict';
 
+  /* 태블릿 구간에서만 경기 카드가 스택 형태로 동작한다 */
+  var CARD_STACK_QUERY = '(min-width: 768px) and (max-width: 1279px)';
+
   /* ----------------------------------------------------------------------
      1. 가로 슬라이더 (네이티브 스크롤 + 진행 바 / 페이지 표시 / 화살표)
      ---------------------------------------------------------------------- */
@@ -14,6 +17,13 @@
 
     var name = root.getAttribute('data-scroller');
     var externalNav = name ? document.querySelector('[data-scroller-nav="' + name + '"]') : null;
+    var stackMedia = root.hasAttribute('data-stack-tablet') ? window.matchMedia(CARD_STACK_QUERY) : null;
+    var isPagerOnly = root.hasAttribute('data-pager-only');
+
+    /* 카드 스택이 켜져 있는 동안에는 스크롤 기반 동작을 모두 멈춘다 */
+    function isStacked() {
+      return !!(stackMedia && stackMedia.matches);
+    }
 
     /* 컨트롤은 슬라이더 안쪽 또는 지정된 외부 영역에서 찾는다 */
     function pick(selector) {
@@ -86,7 +96,9 @@
               }
               if (root.hasAttribute('data-page-by-card')) {
                 var targetCard = track.children[pageIndex];
-                if (targetCard) track.scrollTo({ left: getCardScrollLeft(targetCard), behavior: 'smooth' });
+                if (targetCard) {
+                  track.scrollTo({ left: getCardScrollLeft(targetCard), behavior: 'smooth' });
+                }
                 return;
               }
               var maxScroll = track.scrollWidth - track.clientWidth;
@@ -99,6 +111,8 @@
     }
 
     function render() {
+      if (isStacked()) return;
+
       var pages = getPageCount();
       var page = getCurrentPage();
       var maxScroll = track.scrollWidth - track.clientWidth;
@@ -122,8 +136,8 @@
       if (totalEl) totalEl.textContent = String(pages);
 
       /* 첫/마지막에서 이전·다음 버튼 비활성화 */
-      if (prevBtn) prevBtn.disabled = track.scrollLeft <= 1;
-      if (nextBtn) nextBtn.disabled = track.scrollLeft >= maxScroll - 1;
+      if (prevBtn) prevBtn.disabled = !isPagerOnly && track.scrollLeft <= 1;
+      if (nextBtn) nextBtn.disabled = !isPagerOnly && track.scrollLeft >= maxScroll - 1;
     }
 
     function getStep() {
@@ -139,6 +153,18 @@
     }
 
     function handleSliderMove(direction) {
+      if (isStacked()) return;
+      if (isPagerOnly) {
+        var maxScroll = track.scrollWidth - track.clientWidth;
+        var targetLeft = track.scrollLeft + getStep() * direction;
+        if (direction > 0 && track.scrollLeft >= maxScroll - 1) targetLeft = 0;
+        if (direction < 0 && track.scrollLeft <= 1) targetLeft = maxScroll;
+        track.scrollTo({
+          left: Math.max(0, Math.min(targetLeft, maxScroll)),
+          behavior: 'smooth'
+        });
+        return;
+      }
       track.scrollBy({ left: getStep() * direction, behavior: 'smooth' });
     }
 
@@ -157,7 +183,7 @@
     if (root.hasAttribute('data-click-slide')) {
       Array.prototype.forEach.call(track.querySelectorAll('.match_list > li'), function (card) {
         card.addEventListener('click', function (event) {
-          if (hasDragged) return;
+          if (isStacked() || hasDragged) return;
           event.preventDefault();
           event.stopPropagation();
           handleSliderMove(1);
@@ -176,6 +202,7 @@
       var dragDistance = 0;
 
       track.addEventListener('pointerdown', function (event) {
+        if (isStacked()) return;
         if (event.pointerType === 'mouse' && event.button !== 0) return;
         isDragging = true;
         hasDragged = false;
@@ -215,7 +242,7 @@
       }, true);
     }
 
-    var autoplayDelay = parseInt(root.getAttribute('data-autoplay'), 10);
+    var autoplayDelay = parseInt(root.getAttribute('data-autoplay'), 25);
     var autoplayTimer = null;
 
     function stopAutoplay() {
@@ -225,7 +252,7 @@
 
     function autoplayNext() {
       var maxScroll = track.scrollWidth - track.clientWidth;
-      if (maxScroll <= 0 || document.hidden || window.innerWidth > 767) return;
+      // if (maxScroll <= 0 || document.hidden || window.innerWidth > 767) return;
 
       if (track.scrollLeft >= maxScroll - 1) {
         track.scrollTo({ left: 0, behavior: 'smooth' });
@@ -236,7 +263,7 @@
 
     function startAutoplay() {
       stopAutoplay();
-      if (!autoplayDelay || window.innerWidth > 767) return;
+      // if (!autoplayDelay || window.innerWidth > 767) return;
       autoplayTimer = window.setTimeout(function runAutoplay() {
         autoplayNext();
         autoplayTimer = window.setTimeout(runAutoplay, autoplayDelay);
@@ -262,6 +289,241 @@
   function initScrollers() {
     var list = document.querySelectorAll('[data-scroller]');
     Array.prototype.forEach.call(list, initScroller);
+  }
+
+  /* ----------------------------------------------------------------------
+     1-1. 카드 스택 (태블릿 전용 : 카드를 겹쳐 쌓고 드래그로 넘긴다)
+     ---------------------------------------------------------------------- */
+  function initCardStack(root) {
+    var track = root.querySelector('[data-role="track"]');
+    if (!track) return;
+
+    var cards = Array.prototype.slice.call(track.children);
+    var total = cards.length;
+    if (total < 2) return;
+
+    var name = root.getAttribute('data-scroller');
+    var externalNav = name ? document.querySelector('[data-scroller-nav="' + name + '"]') : null;
+    var dots = (externalNav && externalNav.querySelector('[data-role="dots"]'))
+      || root.querySelector('[data-role="dots"]');
+
+    var media = window.matchMedia(CARD_STACK_QUERY);
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    var DEPTH = 3;          /* 화면에 보이는 카드 수 (맨 앞 1장 + 뒤 2장) */
+    var STEP_X = 36;        /* 뒤 카드가 오른쪽으로 물러나는 거리(px) */
+    var STEP_Y = 14;        /* 뒤 카드가 위로 올라오는 거리(px) */
+    var STEP_SCALE = 0.07;  /* 뒤 카드 한 장당 축소 비율 */
+    var STEP_FADE = 0.28;   /* 뒤 카드 한 장당 투명도 감소량 */
+    var THROW = 72;         /* 카드가 넘어가는 최소 드래그 거리(px) */
+
+    /* 겹친 카드 묶음이 한쪽으로 치우치지 않도록 왼쪽으로 당겨주는 보정값 */
+    var BASE_X = -((DEPTH - 1) * STEP_X) / 2;
+
+    var index = 0;
+    var isActive = false;
+
+    /* 뒤로 밀린 카드의 위치 - depth 값이 클수록 멀리 물러난다 */
+    function stackTransform(depth) {
+      return 'translate3d(' + (BASE_X + depth * STEP_X) + 'px, ' + (depth * -STEP_Y) + 'px, 0)'
+        + ' scale(' + (1 - depth * STEP_SCALE) + ')';
+    }
+
+    /* dragX : 맨 앞 카드를 잡고 끈 거리 (왼쪽으로 끌면 음수) */
+    function paint(dragX) {
+      var width = cards[0].offsetWidth || track.clientWidth || 1;
+      var progress = Math.min(1, Math.abs(dragX) / THROW);
+      var isGoingPrev = dragX > 0;
+
+      cards.forEach(function (card, cardIndex) {
+        var distance = (cardIndex - index + total) % total;
+        var isIncomingPrev = isGoingPrev && distance === total - 1;
+
+        /* 카드가 반투명이라 맨 앞(또는 되돌아오는) 카드만 내용을 보여준다 */
+        card.classList.toggle('is_card_front', distance === 0 || isIncomingPrev);
+
+        if (distance === 0) {
+          /* 맨 앞 카드 : 손가락을 따라 움직이며 살짝 기운다 */
+          card.style.transform = 'translate3d(' + (BASE_X + dragX) + 'px, 0, 0) rotate(' + (dragX / 28) + 'deg)';
+          card.style.opacity = String(1 - Math.min(0.4, Math.abs(dragX) / width));
+          card.style.zIndex = String(total);
+          card.style.pointerEvents = '';
+          return;
+        }
+
+        if (isIncomingPrev) {
+          /* 오른쪽으로 끄는 중 : 이전 카드가 왼쪽에서 되돌아온다 */
+          card.style.transform = 'translate3d(' + (BASE_X - width * (1 - progress)) + 'px, 0, 0)'
+            + ' rotate(' + (-10 * (1 - progress)) + 'deg)';
+          card.style.opacity = String(progress);
+          card.style.zIndex = String(total + 1);
+          card.style.pointerEvents = 'none';
+          return;
+        }
+
+        if (distance >= DEPTH) {
+          /* 더 뒤에 있는 카드는 가장 깊은 자리에 숨긴다 */
+          card.style.transform = stackTransform(DEPTH);
+          card.style.opacity = '0';
+          card.style.zIndex = '0';
+          card.style.pointerEvents = 'none';
+          return;
+        }
+
+        /* 뒤 카드 : 끄는 방향에 따라 앞으로 나오거나 더 물러난다 */
+        var depth = Math.max(0, distance + (isGoingPrev ? progress : -progress));
+        card.style.transform = stackTransform(depth);
+        card.style.opacity = String(Math.max(0, 1 - depth * STEP_FADE));
+        card.style.zIndex = String(total - distance);
+        card.style.pointerEvents = 'none';
+      });
+
+      syncDots();
+    }
+
+    /* 카드 높이가 서로 달라도 잘리지 않도록 가장 큰 높이를 컨테이너에 준다 */
+    function updateHeight() {
+      var height = 0;
+      cards.forEach(function (card) {
+        height = Math.max(height, card.offsetHeight);
+      });
+      if (height > 0) track.style.height = height + 'px';
+    }
+
+    function syncDots() {
+      if (!dots) return;
+      Array.prototype.forEach.call(dots.children, function (dot, dotIndex) {
+        var isCurrent = dotIndex === index;
+        dot.classList.toggle('is_current', isCurrent);
+        if (dot.tagName === 'BUTTON') dot.setAttribute('aria-current', isCurrent ? 'page' : 'false');
+      });
+    }
+
+    function buildDots() {
+      if (!dots || dots.children.length === total) return;
+
+      dots.textContent = '';
+      for (var i = 0; i < total; i += 1) {
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.setAttribute('aria-label', String(i + 1) + '번째 경기 보기');
+        dot.addEventListener('click', (function (targetIndex) {
+          return function () {
+            index = targetIndex;
+            paint(0);
+          };
+        })(i));
+        dots.appendChild(dot);
+      }
+    }
+
+    function moveTo(direction) {
+      index = (index + direction + total) % total;
+      paint(0);
+    }
+
+    /* ---------- 드래그로 카드 넘기기 ---------- */
+    var isDragging = false;
+    var startX = 0;
+    var dragX = 0;
+    var hasDragged = false;
+
+    track.addEventListener('pointerdown', function (event) {
+      if (!isActive) return;
+      if (event.pointerType === 'mouse' && event.button !== 0) return;
+
+      isDragging = true;
+      hasDragged = false;
+      startX = event.clientX;
+      dragX = 0;
+      track.classList.add('is_card_dragging');
+      track.setPointerCapture(event.pointerId);
+    });
+
+    track.addEventListener('pointermove', function (event) {
+      if (!isDragging) return;
+      dragX = event.clientX - startX;
+      if (Math.abs(dragX) > 4) hasDragged = true;
+      paint(dragX);
+    });
+
+    function stopDragging(event) {
+      if (!isDragging) return;
+      isDragging = false;
+      track.classList.remove('is_card_dragging');
+      if (track.hasPointerCapture(event.pointerId)) track.releasePointerCapture(event.pointerId);
+
+      if (event.type === 'pointerup' && Math.abs(dragX) >= THROW) moveTo(dragX < 0 ? 1 : -1);
+      else paint(0);
+      dragX = 0;
+    }
+
+    track.addEventListener('pointerup', stopDragging);
+    track.addEventListener('pointercancel', stopDragging);
+
+    /* 드래그로 카드를 넘긴 직후의 클릭은 링크 이동으로 취급하지 않는다 */
+    track.addEventListener('click', function (event) {
+      if (!isActive) return;
+      if (hasDragged) {
+        event.preventDefault();
+        event.stopPropagation();
+        hasDragged = false;
+        return;
+      }
+      if (root.hasAttribute('data-click-slide')) {
+        event.preventDefault();
+        moveTo(1);
+      }
+    }, true);
+
+    /* ---------- 태블릿 구간에서만 켜고, 벗어나면 원래 슬라이더로 되돌린다 ---------- */
+    function activate() {
+      if (isActive) return;
+      isActive = true;
+      index = 0;
+      track.scrollLeft = 0;
+      track.classList.add('is_card_stack');
+      if (reduceMotion.matches) track.classList.add('is_card_static');
+      buildDots();
+      updateHeight();
+      paint(0);
+    }
+
+    function deactivate() {
+      if (!isActive) return;
+      isActive = false;
+      track.classList.remove('is_card_stack', 'is_card_dragging', 'is_card_static');
+      track.style.height = '';
+      cards.forEach(function (card) {
+        card.classList.remove('is_card_front');
+        card.style.transform = '';
+        card.style.opacity = '';
+        card.style.zIndex = '';
+        card.style.pointerEvents = '';
+      });
+      /* 스크롤러가 자기 기준으로 다시 만들도록 페이지 표시를 비운다 */
+      if (dots) dots.textContent = '';
+    }
+
+    function sync() {
+      if (media.matches) activate();
+      else deactivate();
+    }
+
+    window.addEventListener('resize', function () {
+      sync();
+      if (isActive) {
+        updateHeight();
+        paint(0);
+      }
+    });
+
+    sync();
+  }
+
+  function initCardStacks() {
+    var list = document.querySelectorAll('[data-stack-tablet]');
+    Array.prototype.forEach.call(list, initCardStack);
   }
 
   /* ----------------------------------------------------------------------
@@ -510,7 +772,7 @@
      7. Desktop PLAYER: stacked-card pager
      ---------------------------------------------------------------------- */
   function initDesktopPlayerStack() {
-    if (window.innerWidth < 1280) return;
+    if (window.innerWidth < 768) return;
     var list = document.querySelector('.desktop_player_list');
     if (!list) return;
 
@@ -562,6 +824,90 @@
   /* ----------------------------------------------------------------------
      초기화
      ---------------------------------------------------------------------- */
+  function initMobilePlayer() {
+    var root = document.querySelector('.player_mobile');
+    if (!root) return;
+    var players = {
+      pitcher: [
+        ['1', '박치국', 'PARK CHIGUK', '01_park.webp', '01_park'],
+        ['4', '김동주', 'KIM DONGJU', '04_kim.webp', '04_kim'],
+        ['12', '타카다 타쿠토', 'TAKADA TAKUTO', '12_takada.webp', '12_takada'],
+        ['15', '최주형', 'CHOI JUHYEONG', '15_choi.webp', ''],
+        ['16', '김정우', 'KIM JEONG WOO', '16_kim.webp', '16_kim'],
+        ['17', '박정수', 'PARK JUNG SOO', '17_park.webp', '17_park']
+      ],
+      hitter: [
+        ['2', '김민혁', 'KIM MINHYUK', '02_kim.webp', ''],
+        ['7', '박준영', 'PARK JUNYOUNG', '07_park.webp', ''],
+        ['8', '손주영', 'SON JUYOUNG', '08_son.webp', ''],
+        ['13', '이유찬', 'LEE YUCHAN', '13_lee.webp', ''],
+        ['17', '류현준', 'RYU HYUNJUN', '17_ryu.webp', ''],
+        ['23', '강승호', 'KANG SEUNGHO', '23_kang.webp', '']
+      ]
+    };
+    var category = 'pitcher';
+    var currentIndex = 0;
+    var slides = root.querySelector('[data-mobile-player-slides]');
+    var current = root.querySelector('[data-mobile-player-current]');
+    var total = root.querySelector('[data-mobile-player-total]');
+    var tabs = Array.prototype.slice.call(root.querySelectorAll('[data-mobile-player-tab]'));
+
+    function render() {
+      var item = players[category][currentIndex];
+      var folder = category === 'pitcher' ? 'pitcher' : 'hitter';
+      var photos = item[4]
+        ? [1, 2, 3].map(function (index) {
+          return '<img src="img/player/pitcher/' + item[4] + '_more' + index + '.webp" alt="' + item[1] + ' 선수 경기 사진">';
+        }).join('')
+        : '<span class="player_mobile_placeholder">이미지 준비중</span>'.repeat(3);
+      slides.innerHTML = '<article class="player_mobile_slide"><a class="profile_card" href="#">' +
+        '<span class="profile_img"><img src="img/player/' + folder + '/' + item[3] + '" alt="' + item[1] + ' 선수">' +
+        '<span class="profile_icons"><span><img src="img/Icon/heart.svg" alt=""></span><span><img src="img/Icon/headphones.svg" alt=""></span></span></span>' +
+        '<span class="profile_tit"><span class="profile_name_group"><span class="profile_name"><strong>' + item[1] + '</strong><span>' + (category === 'pitcher' ? '투수' : '타자') + '</span></span>' +
+        '<span class="profile_roman">' + item[2] + '</span></span><span class="profile_no">' + item[0] + '</span></span></a>' +
+        '<div class="player_mobile_photos">' + photos + '</div></article>';
+      current.textContent = currentIndex + 1;
+      total.textContent = players[category].length;
+    }
+
+    root.querySelector('[data-mobile-player-prev]').addEventListener('click', function () {
+      currentIndex = (currentIndex - 1 + players[category].length) % players[category].length;
+      render();
+    });
+    root.querySelector('[data-mobile-player-next]').addEventListener('click', function () {
+      currentIndex = (currentIndex + 1) % players[category].length;
+      render();
+    });
+    function activateTab(tab) {
+        category = tab.getAttribute('data-mobile-player-tab');
+        currentIndex = 0;
+        tabs.forEach(function (item) {
+          var isActive = item === tab;
+          item.classList.toggle('is_active', isActive);
+          item.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          item.setAttribute('tabindex', isActive ? '0' : '-1');
+        });
+        slides.setAttribute('aria-labelledby', tab.id);
+        render();
+    }
+
+    tabs.forEach(function (tab, tabIndex) {
+      tab.addEventListener('click', function () {
+        activateTab(tab);
+      });
+
+      tab.addEventListener('keydown', function (event) {
+        if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+        event.preventDefault();
+        var direction = event.key === 'ArrowRight' ? 1 : -1;
+        var nextIndex = (tabIndex + direction + tabs.length) % tabs.length;
+        activateTab(tabs[nextIndex]);
+        tabs[nextIndex].focus();
+      });
+    });
+    render();
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initScrollers();
     initTabs();
@@ -570,6 +916,7 @@
     initGalleryFlow();
     initMarquee();
     initDesktopPlayerStack();
+    initMobilePlayer();
   });
 
   window.addEventListener('load', function () {
