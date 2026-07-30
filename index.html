@@ -51,7 +51,7 @@
     <div class="header_inner">
       <h1 class="logo">
         <a href="index.html">
-          <img src="img/logo.png" alt="두산베어스 홈으로 이동">
+          <img src="img/doosan_bears_logo.png" alt="두산베어스 홈으로 이동">
         </a>
       </h1>
 
@@ -320,8 +320,10 @@
           <div class="player_desktop_title">
             <h2 class="tit_section">player</h2>
             <div class="tab_list" role="tablist" aria-label="선수 구분">
-              <button type="button" class="tab_btn is_active" role="tab" aria-selected="true">투수</button>
-              <button type="button" class="tab_btn" role="tab" aria-selected="false">타자</button>
+              <button type="button" class="tab_btn is_active" role="tab" aria-selected="true"
+                data-desktop-player-tab="pitcher">투수</button>
+              <button type="button" class="tab_btn" role="tab" aria-selected="false"
+                data-desktop-player-tab="hitter">타자</button>
             </div>
           </div>
           <a class="btn_more" href="#"><span>전체 보기</span><img class="ico" src="img/Icon/arrow-right.svg" alt=""></a>
@@ -1449,12 +1451,30 @@
 
           <ul class="news_list" role="tabpanel" id="panel_news" aria-labelledby="tab_news" hidden>
             <li>
-              <p class="state_empty">등록된 소식이 없습니다.</p>
+              <a href="#">
+                <span class="subject">💚 애큐온캐피탈과 함께하는 GREEN BEARS SERIES! 💚</span>
+                <span class="date">2026-06-29</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span class="subject">두산베어스 Summer 학생 프로모션</span>
+                <span class="date">2026-06-27</span>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <span class="subject">6월 베어스데이</span>
+                <span class="date">2026-06-18</span>
+              </a>
             </li>
           </ul>
 
-          <span class="news_thumb">
-            <img src="img/event/event5.jpg" alt="애큐온캐피탈과 함께하는 GREEN BEARS SERIES 이벤트 포스터">
+          <span class="news_thumb" data-news-thumb="event">
+            <img src="img/event_thum.png" alt="이벤트 썸네일">
+          </span>
+          <span class="news_thumb" data-news-thumb="news" hidden>
+            <img src="img/news_thum.png" alt="뉴스 썸네일">
           </span>
         </div>
       </div>
@@ -1474,7 +1494,7 @@
         </div>
 
         <p class="qna_vid">
-          <video src="img/x/communication/mascort_turn.mp4" muted loop playsinline autoplay
+          <video src="img/x/communication/mascort_turn.mp4" muted loop playsinline preload="metadata"
             aria-label="두산베어스 마스코트 철웅이 영상"></video>
         </p>
       </div>

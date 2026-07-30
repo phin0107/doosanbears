@@ -8,7 +8,7 @@
   var DESKTOP_MIN = 1280;
 
   /* ----------------------------------------------------------------------
-     1. Header : 스크롤 시 상단 고정
+     1. Header : 스크롤 시 상단 고정 + 방향에 따라 숨김/표시
      ---------------------------------------------------------------------- */
   function initHeaderScroll() {
     var header = document.getElementById('header');
@@ -16,14 +16,39 @@
     if (!header || !hero) return;
 
     var isFixed = false;
+    var lastScrollY = Math.max(0, window.scrollY);
+    var DIRECTION_THRESHOLD = 6;
 
     function handleScroll() {
+      var currentScrollY = Math.max(0, window.scrollY);
       var limit = hero.offsetHeight - header.offsetHeight;
-      var shouldFix = window.scrollY > limit;
+      var shouldFix = currentScrollY > limit;
 
       if (shouldFix !== isFixed) {
         isFixed = shouldFix;
         header.classList.toggle('is_fixed', isFixed);
+      }
+
+      if (!isFixed) {
+        header.classList.remove('is_hidden');
+        lastScrollY = currentScrollY;
+        return;
+      }
+
+      /* 전체 메뉴가 열려 있거나 스크롤이 잠긴 동안에는 헤더를 유지 */
+      if (
+        header.querySelector('.gnb.is_open') ||
+        document.documentElement.classList.contains('is_menu_locked')
+      ) {
+        header.classList.remove('is_hidden');
+        lastScrollY = currentScrollY;
+        return;
+      }
+
+      var scrollDelta = currentScrollY - lastScrollY;
+      if (Math.abs(scrollDelta) >= DIRECTION_THRESHOLD) {
+        header.classList.toggle('is_hidden', scrollDelta > 0);
+        lastScrollY = currentScrollY;
       }
     }
 
@@ -95,6 +120,37 @@
     }
 
     toggle.addEventListener('click', handleMenuToggle);
+
+    /*
+     * 데스크톱에서 hover/focus로 펼쳐진 GNB도 아래 방향 스크롤 시 닫는다.
+     * 포인터가 메뉴를 벗어나거나 다시 포커스하면 다음 탐색을 허용한다.
+     */
+    var lastMenuScrollY = Math.max(0, window.scrollY);
+    window.addEventListener('scroll', function () {
+      var currentScrollY = Math.max(0, window.scrollY);
+      var isScrollingDown = currentScrollY - lastMenuScrollY >= 6;
+
+      if (isScrollingDown) {
+        if (gnb.classList.contains('is_open')) setOpen(false);
+        gnb.classList.add('is_scroll_closed');
+
+        if (gnb.contains(document.activeElement)) {
+          document.activeElement.blur();
+        }
+      }
+
+      if (Math.abs(currentScrollY - lastMenuScrollY) >= 6) {
+        lastMenuScrollY = currentScrollY;
+      }
+    }, { passive: true });
+
+    gnb.addEventListener('mouseleave', function () {
+      gnb.classList.remove('is_scroll_closed');
+    });
+
+    gnb.addEventListener('focusin', function () {
+      gnb.classList.remove('is_scroll_closed');
+    });
 
     function setActiveMenu(activeItem) {
       menuItems.forEach(function (menuItem) {
@@ -175,6 +231,61 @@
   }
 
   /* ----------------------------------------------------------------------
+     5. Footer sponsor : 끊김 없는 무한 가로 롤링
+     ---------------------------------------------------------------------- */
+  function initSponsorMarquee() {
+    var sponsor = document.querySelector('.sponsor_wrap');
+    if (!sponsor || sponsor.children.length < 2) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var originals = Array.prototype.slice.call(sponsor.children);
+
+    function appendCloneSet() {
+      originals.forEach(function (item) {
+        var clone = item.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+
+        Array.prototype.forEach.call(clone.querySelectorAll('a, button'), function (control) {
+          control.setAttribute('tabindex', '-1');
+        });
+
+        sponsor.appendChild(clone);
+      });
+    }
+
+    appendCloneSet();
+
+    var firstClone = sponsor.children[originals.length];
+    var resizeTimer = null;
+
+    function measure() {
+      var firstOriginal = sponsor.firstElementChild;
+      if (!firstOriginal || !firstClone) return;
+
+      var distance = firstClone.offsetLeft - firstOriginal.offsetLeft;
+      if (distance <= 0) return;
+
+      /* 한 세트가 화면보다 짧아도 빈 구간이 생기지 않게 복제 세트를 보충 */
+      while (sponsor.scrollWidth < window.innerWidth + distance) {
+        appendCloneSet();
+      }
+
+      var pixelsPerSecond = 70;
+      sponsor.style.setProperty('--sponsor_translate', (-distance) + 'px');
+      sponsor.style.setProperty('--sponsor_duration', Math.max(18, distance / pixelsPerSecond) + 's');
+      sponsor.classList.add('is_rolling');
+    }
+
+    window.addEventListener('resize', function () {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(measure, 150);
+    });
+
+    window.addEventListener('load', measure);
+    measure();
+  }
+
+  /* ----------------------------------------------------------------------
      초기화
      ---------------------------------------------------------------------- */
   document.addEventListener('DOMContentLoaded', function () {
@@ -182,5 +293,6 @@
     initMenuToggle();
     initTopButton();
     initImageFallback();
+    initSponsorMarquee();
   });
 })();

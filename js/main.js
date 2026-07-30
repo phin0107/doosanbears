@@ -554,6 +554,7 @@
         if (newsEventSection) {
           var titSection = newsEventSection.querySelector('.tit_section');
           var newsSide = newsEventSection.querySelector('.news_side p');
+          var thumbnails = newsEventSection.querySelectorAll('[data-news-thumb]');
           var isNewsTab = target.textContent.trim() === 'NEWS';
 
           if (titSection) {
@@ -562,6 +563,10 @@
           if (newsSide) {
             newsSide.innerHTML = isNewsTab ? '두산베어스의<br>뉴스' : '두산베어스의<br>이벤트 소식';
           }
+          Array.prototype.forEach.call(thumbnails, function (thumbnail) {
+            var targetType = isNewsTab ? 'news' : 'event';
+            thumbnail.hidden = thumbnail.getAttribute('data-news-thumb') !== targetType;
+          });
         }
 
         window.dispatchEvent(new Event('resize'));
@@ -773,14 +778,53 @@
      ---------------------------------------------------------------------- */
   function initDesktopPlayerStack() {
     if (window.innerWidth < 768) return;
-    var list = document.querySelector('.desktop_player_list');
+    var root = document.querySelector('.player_desktop');
+    if (!root) return;
+    var list = root.querySelector('.desktop_player_list');
     if (!list) return;
 
     var rows = Array.prototype.slice.call(list.querySelectorAll('.desktop_player_row'));
     if (!rows.length) return;
 
+    var pitcherMarkup = list.innerHTML;
+    var tabs = Array.prototype.slice.call(root.querySelectorAll('[data-desktop-player-tab]'));
+    var hitterPlayers = [
+      ['2', '김민혁', 'KIM MINHYUK', '02_kim'],
+      ['7', '박준영', 'PARK JUNYOUNG', '07_park'],
+      ['8', '손주영', 'SON JUYOUNG', '08_son'],
+      ['13', '이유찬', 'LEE YUCHAN', '13_lee'],
+      ['17', '류현준', 'RYU HYUNJUN', '17_ryu'],
+      ['23', '강승호', 'KANG SEUNGHO', '23_kang']
+    ];
     var currentIndex = 0;
     var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function createHitterMarkup() {
+      return hitterPlayers.map(function (player, index) {
+        var previous = hitterPlayers[(index - 1 + hitterPlayers.length) % hitterPlayers.length];
+        var next = hitterPlayers[(index + 1) % hitterPlayers.length];
+        var photos = [1, 2, 3].map(function (photoIndex) {
+          return '<img src="img/player/hitter/' + player[3] + '_more' + photoIndex +
+            '.webp" alt="경기 중인 ' + player[1] + ' 선수">';
+        }).join('');
+
+        return '<article class="desktop_player_row" id="desktop_hitter_' + player[0] + '">' +
+          '<div class="desktop_player_side">' +
+          '<a class="profile_card" href="#"><span class="profile_img">' +
+          '<img src="img/player/hitter/' + player[3] + '.webp" alt="' + player[1] + ' 선수">' +
+          '<span class="profile_icons"><span><img src="img/Icon/heart.svg" alt=""></span>' +
+          '<span><img src="img/Icon/headphones.svg" alt=""></span></span></span>' +
+          '<span class="profile_tit"><span class="profile_name_group">' +
+          '<span class="profile_name"><strong>' + player[1] + '</strong><span>타자</span></span>' +
+          '<span class="profile_roman">' + player[2] + '</span></span>' +
+          '<span class="profile_no">' + player[0] + '</span></span></a>' +
+          '<nav class="desktop_player_pager" aria-label="타자 목록">' +
+          '<a class="pager_arrow" href="#desktop_hitter_' + previous[0] + '" aria-label="이전 선수">‹</a>' +
+          '<span>' + (index + 1) + '</span><span>/</span><span>' + hitterPlayers.length + '</span>' +
+          '<a class="pager_arrow" href="#desktop_hitter_' + next[0] + '" aria-label="다음 선수">›</a>' +
+          '</nav></div><div class="desktop_player_photos">' + photos + '</div></article>';
+      }).join('');
+    }
 
     function updateStack(index) {
       rows.forEach(function (row, rowIndex) {
@@ -807,15 +851,28 @@
       }, reduceMotion.matches ? 0 : 650);
     }
 
+    function renderCategory(category) {
+      list.innerHTML = category === 'hitter' ? createHitterMarkup() : pitcherMarkup;
+      rows = Array.prototype.slice.call(list.querySelectorAll('.desktop_player_row'));
+      currentIndex = 0;
+      updateStack(currentIndex);
+    }
+
     list.addEventListener('click', function (event) {
-      var control = event.target.closest('.desktop_player_pager a[href^="#desktop_player_"]');
+      var control = event.target.closest('.desktop_player_pager a[href^="#desktop_"]');
       if (!control) return;
 
       event.preventDefault();
-      var target = document.querySelector(control.getAttribute('href'));
+      var target = list.querySelector(control.getAttribute('href'));
       var nextIndex = rows.indexOf(target);
-      var direction = control.getAttribute('aria-label') === '다음 선수' ? 'next' : 'prev';
+      var direction = nextIndex === (currentIndex + 1) % rows.length ? 'next' : 'prev';
       if (nextIndex >= 0) moveTo(nextIndex, direction);
+    });
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        renderCategory(tab.getAttribute('data-desktop-player-tab'));
+      });
     });
 
     updateStack(currentIndex);
@@ -837,12 +894,12 @@
         ['17', '박정수', 'PARK JUNG SOO', '17_park.webp', '17_park']
       ],
       hitter: [
-        ['2', '김민혁', 'KIM MINHYUK', '02_kim.webp', ''],
-        ['7', '박준영', 'PARK JUNYOUNG', '07_park.webp', ''],
-        ['8', '손주영', 'SON JUYOUNG', '08_son.webp', ''],
-        ['13', '이유찬', 'LEE YUCHAN', '13_lee.webp', ''],
-        ['17', '류현준', 'RYU HYUNJUN', '17_ryu.webp', ''],
-        ['23', '강승호', 'KANG SEUNGHO', '23_kang.webp', '']
+        ['2', '김민혁', 'KIM MINHYUK', '02_kim.webp', '02_kim'],
+        ['7', '박준영', 'PARK JUNYOUNG', '07_park.webp', '07_park'],
+        ['8', '손주영', 'SON JUYOUNG', '08_son.webp', '08_son'],
+        ['13', '이유찬', 'LEE YUCHAN', '13_lee.webp', '13_lee'],
+        ['17', '류현준', 'RYU HYUNJUN', '17_ryu.webp', '17_ryu'],
+        ['23', '강승호', 'KANG SEUNGHO', '23_kang.webp', '23_kang']
       ]
     };
     var category = 'pitcher';
@@ -857,7 +914,7 @@
       var folder = category === 'pitcher' ? 'pitcher' : 'hitter';
       var photos = item[4]
         ? [1, 2, 3].map(function (index) {
-          return '<img src="img/player/pitcher/' + item[4] + '_more' + index + '.webp" alt="' + item[1] + ' 선수 경기 사진">';
+          return '<img src="img/player/' + folder + '/' + item[4] + '_more' + index + '.webp" alt="' + item[1] + ' 선수 경기 사진">';
         }).join('')
         : '<span class="player_mobile_placeholder">이미지 준비중</span>'.repeat(3);
       slides.innerHTML = '<article class="player_mobile_slide"><a class="profile_card" href="#">' +
@@ -925,23 +982,147 @@
 })();
 
 
-/* 마스코트 애니메이션 스크롤 트리거 */
-document.addEventListener('DOMContentLoaded', () => {
-  const mascot = document.querySelector('.guide_mascot');
-  const targetSection = document.querySelector('.jamsil_guide');
+/* 잠실 가이드 마스코트: 화면 중앙을 따라 좌우로 움직이며 내려오기 */
+document.addEventListener('DOMContentLoaded', function () {
+  var mascot = document.querySelector('.guide_mascot');
+  var targetSection = document.querySelector('.jamsil_guide');
 
   if (!targetSection || !mascot) return;
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        mascot.classList.add('is_animated');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, {
-    threshold: 0.2
-  });
+  var rafId = null;
+  var currentX = 0;
+  var currentY = 0;
+  var targetX = 0;
+  var targetY = 0;
+  var lastTime = 0;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-  observer.observe(targetSection);
+  function calculateMascotTarget() {
+    var sectionRect = targetSection.getBoundingClientRect();
+    var sectionTop = window.scrollY + sectionRect.top;
+    var sectionHeight = targetSection.offsetHeight;
+    var mascotStyle = window.getComputedStyle(mascot);
+    var mascotTop = parseFloat(mascotStyle.top) || 0;
+    var mascotLeft = mascot.offsetLeft;
+    var mascotWidth = mascot.offsetWidth;
+    var mascotHeight = mascot.offsetHeight;
+    var bottomGap = Math.max(40, window.innerHeight * 0.08);
+    var maxTravel = Math.max(
+      0,
+      sectionHeight - mascotTop - mascotHeight - bottomGap
+    );
+
+    /*
+     * 마스코트의 중심을 화면 세로 중앙에 맞추되 섹션 밖으로는
+     * 나가지 않게 제한한다. 스크롤을 올리면 같은 경로로 돌아온다.
+     */
+    var centeredY = window.scrollY + (window.innerHeight - mascotHeight) / 2
+      - sectionTop - mascotTop;
+    var translateY = Math.max(0, Math.min(maxTravel, centeredY));
+    var progress = maxTravel > 0 ? translateY / maxTravel : 0;
+
+    /*
+     * 가로 경로: 가운데 → 오른쪽 → 왼쪽 → 가운데.
+     * sin 곡선을 사용해 방향 전환이 부드럽고, 화면 가장자리의
+     * 안전 여백 안에서만 움직이도록 이동 폭을 제한한다.
+     */
+    var viewportWidth = document.documentElement.clientWidth;
+    var centerX = (viewportWidth - mascotWidth) / 2;
+    var edgeGap = Math.max(20, viewportWidth * 0.04);
+    var maxAmplitude = Math.max(
+      0,
+      Math.min(centerX - edgeGap, viewportWidth - edgeGap - centerX - mascotWidth)
+    );
+    var amplitude = Math.min(viewportWidth * 0.28, maxAmplitude);
+    var pathX = Math.sin(progress * Math.PI * 2) * amplitude;
+    var translateX = centerX - mascotLeft + pathX;
+
+    targetX = translateX;
+    targetY = translateY;
+  }
+
+  function renderMascotPosition(now) {
+    var deltaTime = lastTime ? Math.min((now - lastTime) / 1000, 0.05) : 0;
+    var ease = reduceMotion.matches ? 1 : 1 - Math.exp(-deltaTime / 0.14);
+    lastTime = now;
+
+    currentX += (targetX - currentX) * ease;
+    currentY += (targetY - currentY) * ease;
+
+    mascot.style.setProperty('--mascot_scroll_x', currentX + 'px');
+    mascot.style.setProperty('--mascot_scroll_y', currentY + 'px');
+
+    if (
+      Math.abs(targetX - currentX) > 0.1 ||
+      Math.abs(targetY - currentY) > 0.1
+    ) {
+      rafId = window.requestAnimationFrame(renderMascotPosition);
+      return;
+    }
+
+    currentX = targetX;
+    currentY = targetY;
+    mascot.style.setProperty('--mascot_scroll_x', currentX + 'px');
+    mascot.style.setProperty('--mascot_scroll_y', currentY + 'px');
+    rafId = null;
+    lastTime = 0;
+  }
+
+  function requestRender() {
+    calculateMascotTarget();
+    if (rafId !== null) return;
+    rafId = window.requestAnimationFrame(renderMascotPosition);
+  }
+
+  calculateMascotTarget();
+  currentX = targetX;
+  currentY = targetY;
+  mascot.style.setProperty('--mascot_scroll_x', currentX + 'px');
+  mascot.style.setProperty('--mascot_scroll_y', currentY + 'px');
+  window.addEventListener('scroll', requestRender, { passive: true });
+  window.addEventListener('resize', requestRender);
+  window.addEventListener('load', requestRender);
+});
+
+/* 문의 섹션이 화면에 들어오면 마스코트 영상 재생 */
+document.addEventListener('DOMContentLoaded', function () {
+  var section = document.querySelector('.communication');
+  var video = document.querySelector('.qna_vid video');
+
+  if (!section || !video) return;
+
+  var isInView = false;
+
+  function syncVideoPlayback() {
+    if (isInView && !document.hidden) {
+      var playPromise = video.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(function () {
+          /* 브라우저가 자동 재생을 차단하면 조용히 정지 상태를 유지 */
+        });
+      }
+      return;
+    }
+
+    video.pause();
+    video.currentTime = 0;
+  }
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        isInView = entry.isIntersecting && entry.intersectionRatio >= 0.35;
+      });
+      syncVideoPlayback();
+    }, {
+      threshold: [0, 0.35]
+    });
+
+    observer.observe(section);
+  } else {
+    isInView = true;
+    syncVideoPlayback();
+  }
+
+  document.addEventListener('visibilitychange', syncVideoPlayback);
 });
